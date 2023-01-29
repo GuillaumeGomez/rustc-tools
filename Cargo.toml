@@ -1,0 +1,15 @@
+[package]
+name = "rustc-tools"
+version = "0.1.0"
+edition = "2021"
+
+# A noop dependency that changes in the Rust repository, it's a bit of a hack.
+# See the `src/tools/rustc-workspace-hack/README.md` file in `rust-lang/rust`
+# for more information.
+rustc-workspace-hack = "1.0.0"
+
+[lib]
+name = "rustc_tools"
+
+[dependencies]
+term = "0.7"
