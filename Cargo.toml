@@ -1,6 +1,12 @@
 [package]
 name = "rustc-tools"
 version = "0.1.0"
+authors = ["Guillaume Gomez <guillaume1.gomez@gmail.com>"]
+
+description = "Some internal rustc tools made accessible"
+repository = "https://github.com/GuillaumeGomez/rustc-tools"
+license = "MIT"
+readme = "README.md"
 edition = "2021"
 
 # A noop dependency that changes in the Rust repository, it's a bit of a hack.
