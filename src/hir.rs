@@ -28,7 +28,8 @@ use std::sync::LazyLock;
 ///
 /// **VERY IMPORTANT TO NOTE**: if you want to run this code on a crate with dependencies, you'll
 /// need to pass the according options so that `rustc` knows where to look for them. otherwise it
-/// will simply fail to compile and the `callback` won't be called.
+/// will simply fail to compile and the `callback` won't be called. A good example of the list
+/// of the expected arguments can be seen when you run `cargo build -v`.
 ///
 /// Don't forget to take a look at the [`TyCtxt`](https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/ty/struct.TyCtxt.html)
 /// and at the [`Map`](https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/hir/map/struct.Map.html)
