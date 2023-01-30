@@ -92,7 +92,7 @@ dependencies = [
 
 [[package]]
 name = "rustc-tools"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "term",
 ]
