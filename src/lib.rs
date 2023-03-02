@@ -1,6 +1,5 @@
 #![feature(rustc_private)]
 #![feature(once_cell)]
-
 #![cfg_attr(doc, doc = include_str!("../README.md"))]
 
 // We need to import them like this otherwise it doesn't work.
@@ -33,6 +32,6 @@ pub enum Error<E> {
 
 /// Very basic lexer which return a lexer iterator. It doesn't handle errors or anything. For more
 /// advanced usage, take a look at [`with_ast_parser`] instead.
-pub fn lexer<'a>(source_code: &'a str) -> rustc_lexer::Cursor<'a> {
+pub fn lexer(source_code: &str) -> rustc_lexer::Cursor<'_> {
     rustc_lexer::Cursor::new(source_code)
 }

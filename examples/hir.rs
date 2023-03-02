@@ -51,14 +51,14 @@ impl<'tcx> Visitor<'tcx> for ItemsLocator<'tcx> {
 
 fn main() {
     let args: Vec<String> = std::env::args().skip(1).collect();
-    if args.len() < 1 {
+    if args.is_empty() {
         eprintln!("Missing file operand");
         return;
     }
     println!("Running HIR example with arguments `{:?}`", args);
     with_tyctxt(&args, |tcx| {
         println!("Here are the available crates:");
-        for krate in tcx.crates(()).into_iter() {
+        for krate in tcx.crates(()).iter() {
             println!("  * {}", tcx.crate_name(*krate));
         }
         println!(
