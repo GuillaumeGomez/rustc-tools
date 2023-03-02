@@ -21,7 +21,7 @@ impl<'ast> Visitor<'ast> for PublicItemVisitor {
 }
 
 fn main() {
-    let p = match std::env::args().skip(1).next() {
+    let p = match std::env::args().nth(1) {
         Some(p) => p,
         None => {
             eprintln!("Missing file operand");
