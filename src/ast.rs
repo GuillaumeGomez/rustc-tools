@@ -122,7 +122,7 @@ fn default_handler(
         silent_emitter()
     } else {
         let fallback_bundle =
-            rustc_errors::fallback_fluent_bundle(rustc_errors::DEFAULT_LOCALE_RESOURCES, false);
+            rustc_errors::fallback_fluent_bundle(rustc_driver::DEFAULT_LOCALE_RESOURCES.to_vec(), false);
         Box::new(EmitterWriter::stderr(
             color_cfg,
             Some(source_map.clone()),
@@ -133,6 +133,7 @@ fn default_handler(
             None,
             false,
             false,
+            rustc_errors::TerminalUrl::No,
         ))
     };
     Handler::with_emitter(
