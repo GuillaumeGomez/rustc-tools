@@ -1,0 +1,34 @@
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+name: CI
+
+# If a new push on the PR is done, cancel the build
+concurrency: 
+  group: ${{ github.head_ref }}
+  cancel-in-progress: true
+
+jobs:
+  rustfmt:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: rustup show active-toolchain
+      - run: cargo fmt -- --check
+
+  clippy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: sed -i "s/rustfmt/clippy/" rust-toolchain
+      - run: rustup show active-toolchain
+      - run: cargo clippy --all-targets -- -D warnings
+
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: rustup show active-toolchain
+      - run: cargo check
