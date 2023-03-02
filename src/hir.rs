@@ -75,16 +75,11 @@ pub fn with_tyctxt<T: marker::Send, F: FnOnce(TyCtxt<'_>) -> T + marker::Send>(
         }
 
         compiler.enter(|queries| {
-            {
-                // FIXME: very likely unneeded.
-                let _expansion = abort_on_err(queries.expansion(), sess);
-            }
-
             if sess.diagnostic().has_errors_or_lint_errors().is_some() {
                 sess.fatal("Compilation failed, aborting");
             }
 
-            let global_ctxt = abort_on_err(queries.global_ctxt(), sess);
+            let mut global_ctxt = abort_on_err(queries.global_ctxt(), sess);
 
             global_ctxt.enter(|tcx| Ok(callback(tcx)))
         })
@@ -132,7 +127,7 @@ fn new_handler(
     unstable_opts: &UnstableOptions,
 ) -> rustc_errors::Handler {
     let fallback_bundle =
-        rustc_errors::fallback_fluent_bundle(rustc_errors::DEFAULT_LOCALE_RESOURCES, false);
+        rustc_errors::fallback_fluent_bundle(rustc_driver::DEFAULT_LOCALE_RESOURCES.to_vec(), false);
     let emitter: Box<dyn Emitter + Send> = match error_format {
         ErrorOutputType::HumanReadable(kind) => {
             let (short, color_config) = kind.unzip();
@@ -147,6 +142,7 @@ fn new_handler(
                     diagnostic_width,
                     false,
                     unstable_opts.track_diagnostics,
+                    rustc_errors::TerminalUrl::No,
                 )
                 .ui_testing(unstable_opts.ui_testing),
             )
@@ -168,6 +164,7 @@ fn new_handler(
                     diagnostic_width,
                     false,
                     unstable_opts.track_diagnostics,
+                    rustc_errors::TerminalUrl::No,
                 )
                 .ui_testing(unstable_opts.ui_testing),
             )
@@ -270,5 +267,6 @@ fn create_config(matches: &getopts::Matches) -> Option<interface::Config> {
         }),
         make_codegen_backend: None,
         registry: rustc_driver::diagnostics_registry(),
+        locale_resources: rustc_driver::DEFAULT_LOCALE_RESOURCES,
     })
 }
