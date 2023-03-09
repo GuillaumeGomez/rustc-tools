@@ -40,6 +40,22 @@ impl Callbacks for Lints {
     }
 }
 
+/// If you want to create a linter, this the function you want to use.
+///
+/// * `args` is what is provided to the compiler.
+/// * `tracked_files` is the files which will trigger a re-compilation if they are modified.
+/// * `callback` is called when everything is setup. This is where you will register your lints
+///   before they are run by rustc directly. It provides a mutable reference to the [`LintStore`]
+///   type.
+///
+/// Take a look at the `examples/lint.rs` file if you want an example on how to create lints.
+///
+/// **VERY IMPORTANT TO NOTE**: if you want to run this code on a crate with dependencies, you'll
+/// need to pass the according options so that `rustc` knows where to look for them. otherwise it
+/// will simply fail to compile and the `callback` won't be called. A good example of the list
+/// of the expected arguments can be seen when you run `cargo build -v`.
+///
+/// [`LintStore`]: https://doc.rust-lang.org/nightly/nightly-rustc/rustc_lint/struct.LintStore.html
 pub fn with_lints<F: Fn(&mut LintStore) + Send + Sync + 'static>(
     args: &[String],
     tracked_files: Vec<String>,
