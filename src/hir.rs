@@ -24,20 +24,26 @@ use std::path::PathBuf;
 use std::sync::LazyLock;
 
 /// If you need more information than what is provided by
-/// [`with_ast_parser`](crate::with_ast_parser), this is the function you'll use.
+/// [`with_ast_parser`](crate::with_ast_parser), this is the function you will use.
+///
+/// * `rustc_args` argument is what will be provided to rustc.
+/// * `callback` argument is the callback that will be called once everything has been set up. It
+///   provides a [`TyCtxt`] instance which will allow to use the rustc query engine.
 ///
 /// **VERY IMPORTANT TO NOTE**: if you want to run this code on a crate with dependencies, you'll
 /// need to pass the according options so that `rustc` knows where to look for them. otherwise it
 /// will simply fail to compile and the `callback` won't be called. A good example of the list
 /// of the expected arguments can be seen when you run `cargo build -v`.
 ///
-/// Don't forget to take a look at the [`TyCtxt`](https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/ty/struct.TyCtxt.html)
-/// and at the [`Map`](https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/hir/map/struct.Map.html)
+/// Don't forget to take a look at the [`TyCtxt`] and at the
+/// [`Map`](https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/hir/map/struct.Map.html)
 /// documentations.
 ///
 /// And to make things much simpler, I strongly recommend to use
 /// the [HIR visitor](https://doc.rust-lang.org/nightly/nightly-rustc/rustc_hir/intravisit/trait.Visitor.html).
 /// (You can take a look at how to use it with `examples/hir.rs`.)
+///
+/// [`TyCtxt`]: https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/ty/struct.TyCtxt.html
 pub fn with_tyctxt<T: marker::Send, F: FnOnce(TyCtxt<'_>) -> T + marker::Send>(
     rustc_args: &[String],
     callback: F,

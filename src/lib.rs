@@ -12,6 +12,7 @@ pub extern crate rustc_hir;
 pub extern crate rustc_interface;
 pub extern crate rustc_lexer;
 pub extern crate rustc_lint;
+pub extern crate rustc_lint_defs;
 pub extern crate rustc_middle;
 pub extern crate rustc_parse;
 pub extern crate rustc_session;
@@ -19,9 +20,11 @@ pub extern crate rustc_span;
 
 mod ast;
 mod hir;
+mod lint;
 
 pub use ast::with_ast_parser;
 pub use hir::with_tyctxt;
+pub use lint::with_lints;
 
 /// Error returned by the API. If the parser encounters a problem, it'll always be `Error::Parser`.
 /// `Error::Other` is for users.
