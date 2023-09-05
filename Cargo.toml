@@ -1,6 +1,6 @@
 [package]
 name = "rustc-tools"
-version = "0.1.2"
+version = "0.2.0"
 authors = ["Guillaume Gomez <guillaume1.gomez@gmail.com>"]
 
 description = "Some internal rustc tools made accessible"
