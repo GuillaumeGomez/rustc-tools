@@ -1,8 +1,11 @@
 #![feature(rustc_private)] // This feature must be added so we can use compiler APIs.
 
-use rustc_tools::rustc_ast::ast::{Item, VisibilityKind};
-use rustc_tools::rustc_ast::visit::{walk_crate, walk_item, Visitor};
-use rustc_tools::rustc_span::edition::Edition;
+extern crate rustc_ast;
+extern crate rustc_span;
+
+use rustc_ast::ast::{Item, VisibilityKind};
+use rustc_ast::visit::{walk_crate, walk_item, Visitor};
+use rustc_span::edition::Edition;
 use rustc_tools::with_ast_parser;
 
 use std::path::Path;
