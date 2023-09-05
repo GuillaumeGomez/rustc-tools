@@ -8,7 +8,7 @@ If you need to write a Rust compiler plugin (`clippy` and `rustdoc` are good exa
 
 ## How to use it?
 
-Since it provides and uses `rustc` API, it only works on a very specific nightly version of the Rust compiler. Take a look at the `rust-toolchain` file.
+Since it provides and uses `rustc` API, it only works on a very specific nightly version of the Rust compiler. Copy the `rust-toolchain` file into your project.
 
 Another thing required: you need to add `#![feature(rustc_private)` in your crate to be able to use `rustc_tools`.
 

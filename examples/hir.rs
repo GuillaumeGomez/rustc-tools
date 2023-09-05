@@ -1,5 +1,6 @@
 #![feature(rustc_private)] // This feature must be added so we can use compiler APIs.
 
+// We need to import them like this otherwise it doesn't work.
 extern crate rustc_hir;
 extern crate rustc_middle;
 extern crate rustc_span;
