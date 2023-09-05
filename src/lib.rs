@@ -1,22 +1,23 @@
 #![feature(rustc_private)]
-#![feature(once_cell)]
+#![feature(lazy_cell)]
 #![cfg_attr(doc, doc = include_str!("../README.md"))]
 
 // We need to import them like this otherwise it doesn't work.
-pub extern crate rustc_ast;
-pub extern crate rustc_data_structures;
-pub extern crate rustc_driver;
-pub extern crate rustc_errors;
-pub extern crate rustc_feature;
-pub extern crate rustc_hir;
-pub extern crate rustc_interface;
-pub extern crate rustc_lexer;
-pub extern crate rustc_lint;
-pub extern crate rustc_lint_defs;
-pub extern crate rustc_middle;
-pub extern crate rustc_parse;
-pub extern crate rustc_session;
-pub extern crate rustc_span;
+extern crate rustc_ast;
+extern crate rustc_data_structures;
+extern crate rustc_driver;
+extern crate rustc_errors;
+extern crate rustc_feature;
+extern crate rustc_hir;
+extern crate rustc_interface;
+extern crate rustc_lexer;
+extern crate rustc_lint;
+extern crate rustc_lint_defs;
+extern crate rustc_middle;
+extern crate rustc_parse;
+extern crate rustc_passes;
+extern crate rustc_session;
+extern crate rustc_span;
 
 mod ast;
 mod hir;

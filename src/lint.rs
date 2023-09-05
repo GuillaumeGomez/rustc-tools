@@ -3,6 +3,8 @@
 use rustc_driver::Callbacks;
 use rustc_interface::interface::Config;
 use rustc_lint::LintStore;
+use rustc_session::config::ErrorOutputType;
+use rustc_session::EarlyErrorHandler;
 use rustc_span::{ErrorGuaranteed, Symbol};
 
 use std::sync::Arc;
@@ -61,7 +63,8 @@ pub fn with_lints<F: Fn(&mut LintStore) + Send + Sync + 'static>(
     tracked_files: Vec<String>,
     callback: F,
 ) -> Result<(), ErrorGuaranteed> {
-    rustc_driver::init_rustc_env_logger();
+    let handler = EarlyErrorHandler::new(ErrorOutputType::default());
+    rustc_driver::init_rustc_env_logger(&handler);
     rustc_driver::catch_fatal_errors(move || {
         rustc_driver::RunCompiler::new(
             args,

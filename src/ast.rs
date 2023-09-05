@@ -125,29 +125,14 @@ fn default_handler(
             rustc_driver::DEFAULT_LOCALE_RESOURCES.to_vec(),
             false,
         );
-        Box::new(EmitterWriter::stderr(
-            color_cfg,
-            Some(source_map.clone()),
-            None,
-            fallback_bundle,
-            false,
-            false,
-            None,
-            false,
-            false,
-            rustc_errors::TerminalUrl::No,
-        ))
+        Box::new(EmitterWriter::stderr(color_cfg, fallback_bundle))
     };
-    Handler::with_emitter(
-        true,
-        None,
-        Box::new(SilentOnIgnoredFilesEmitter {
-            has_non_ignorable_parser_errors: false,
-            source_map,
-            emitter,
-            can_reset,
-        }),
-    )
+    Handler::with_emitter(Box::new(SilentOnIgnoredFilesEmitter {
+        has_non_ignorable_parser_errors: false,
+        source_map,
+        emitter,
+        can_reset,
+    }))
 }
 
 fn create_parser_session() -> ParseSess {

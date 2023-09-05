@@ -17,15 +17,19 @@
 
 #![feature(rustc_private)] // This feature must be added so we can use compiler APIs.
 
-use rustc_tools::rustc_ast;
-use rustc_tools::rustc_hir::def_id::LocalDefId;
-use rustc_tools::rustc_hir::intravisit::FnKind;
-use rustc_tools::rustc_hir::{Body, FnDecl};
-use rustc_tools::rustc_lint::{
-    EarlyContext, EarlyLintPass, LateContext, LateLintPass, LintContext, LintStore,
-};
-use rustc_tools::rustc_session::{declare_lint_pass, declare_tool_lint};
-use rustc_tools::rustc_span::Span;
+// We need to import them like this otherwise it doesn't work.
+extern crate rustc_ast;
+extern crate rustc_hir;
+extern crate rustc_lint;
+extern crate rustc_session;
+extern crate rustc_span;
+
+use rustc_hir::def_id::LocalDefId;
+use rustc_hir::intravisit::FnKind;
+use rustc_hir::{Body, FnDecl};
+use rustc_lint::{EarlyContext, EarlyLintPass, LateContext, LateLintPass, LintContext, LintStore};
+use rustc_session::{declare_lint_pass, declare_tool_lint};
+use rustc_span::Span;
 use rustc_tools::with_lints;
 
 declare_tool_lint! {

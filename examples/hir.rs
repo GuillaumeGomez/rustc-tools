@@ -1,10 +1,15 @@
 #![feature(rustc_private)] // This feature must be added so we can use compiler APIs.
 
-use rustc_tools::rustc_hir::def_id::LOCAL_CRATE;
-use rustc_tools::rustc_hir::intravisit::{walk_item, Visitor};
-use rustc_tools::rustc_hir::Item;
-use rustc_tools::rustc_middle::ty::TyCtxt;
-use rustc_tools::rustc_span::{FileName, Span};
+// We need to import them like this otherwise it doesn't work.
+extern crate rustc_hir;
+extern crate rustc_middle;
+extern crate rustc_span;
+
+use rustc_hir::def_id::LOCAL_CRATE;
+use rustc_hir::intravisit::{walk_item, Visitor};
+use rustc_hir::Item;
+use rustc_middle::ty::TyCtxt;
+use rustc_span::{FileName, Span};
 use rustc_tools::with_tyctxt;
 
 struct ItemsLocator<'tcx> {
