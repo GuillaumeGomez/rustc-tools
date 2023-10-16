@@ -30,7 +30,7 @@ If you want more information about all this, I strongly recommend you to go read
 
 There are a few examples available in the `examples` folder. To run them:
 
-```
+```bash
 $ cargo run --example ast -- asset/example_file.rs
 $ cargo run --example hir -- asset/example_file.rs
 $ cargo run --example lint -- asset/example_file.rs

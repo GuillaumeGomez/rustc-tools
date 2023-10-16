@@ -1,4 +1,5 @@
-use rustc_data_structures::sync::{Lrc, Send};
+use rustc_data_structures::marker::DynSend;
+use rustc_data_structures::sync::Lrc;
 use rustc_data_structures::unord::UnordSet;
 use rustc_driver::abort_on_err;
 use rustc_errors::emitter::{Emitter, EmitterWriter};
@@ -65,7 +66,7 @@ pub fn with_tyctxt<T: marker::Send, F: FnOnce(TyCtxt<'_>) -> T + marker::Send>(
 
     // Note that we discard any distinction between different non-zero exit
     // codes from `from_matches` here.
-    let config = match create_config(&mut handler, &matches) {
+    let config = match create_config(&mut handler, &matches, args) {
         Some(opts) => opts,
         None => return Err("Failed to create_config".to_owned()),
     };
@@ -154,7 +155,7 @@ fn new_handler(
         rustc_driver::DEFAULT_LOCALE_RESOURCES.to_vec(),
         false,
     );
-    let emitter: Box<dyn Emitter + Send> = match error_format {
+    let emitter: Box<dyn Emitter + DynSend> = match error_format {
         ErrorOutputType::HumanReadable(kind) => {
             let (short, color_config) = kind.unzip();
             Box::new(
@@ -198,6 +199,7 @@ fn new_handler(
 fn create_config(
     handler: &mut EarlyErrorHandler,
     matches: &getopts::Matches,
+    args: Vec<String>,
 ) -> Option<interface::Config> {
     let color = config::parse_color(handler, matches);
     let config::JsonConfig { json_rendered, .. } = config::parse_json(handler, matches);
@@ -274,7 +276,7 @@ fn create_config(
         lint_caps: Default::default(),
         parse_sess_created: None,
         register_lints: None,
-        override_queries: Some(|_sess, providers, _external_providers| {
+        override_queries: Some(|_sess, providers| {
             // Most lints will require typechecking, so just don't run them.
             providers.lint_mod = |_, _| {};
             // hack so that `used_trait_imports` won't try to call typeck
@@ -287,5 +289,6 @@ fn create_config(
         registry: rustc_driver::diagnostics_registry(),
         locale_resources: rustc_driver::DEFAULT_LOCALE_RESOURCES,
         ice_file: None,
+        expanded_args: args,
     })
 }
