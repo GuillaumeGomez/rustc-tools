@@ -108,6 +108,5 @@ fn main() -> Result<(), ()> {
         store.register_early_pass(|| Box::new(WarnGenerics));
         store.register_late_pass(|_| Box::new(OddFunctionLineCount));
     })
-    .map(|_| ())
     .map_err(|_| ())
 }
