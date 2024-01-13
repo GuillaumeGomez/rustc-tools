@@ -20,10 +20,12 @@ extern crate rustc_session;
 extern crate rustc_span;
 
 mod ast;
+mod cargo;
 mod hir;
 mod lint;
 
 pub use ast::with_ast_parser;
+pub use cargo::{cargo_integration, get_supported_rustc_version};
 pub use hir::with_tyctxt;
 pub use lint::with_lints;
 

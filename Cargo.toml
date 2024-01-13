@@ -19,3 +19,4 @@ name = "rustc_tools"
 
 [dependencies]
 term = "0.7"
+cargo_metadata = "0.18"
