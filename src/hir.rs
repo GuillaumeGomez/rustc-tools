@@ -35,6 +35,10 @@ use std::sync::LazyLock;
 /// will simply fail to compile and the `callback` won't be called. A good example of the list
 /// of the expected arguments can be seen when you run `cargo build -v`.
 ///
+/// Take a look at [`cargo_integration`](crate::cargo_integration) and at
+/// [rustc-tools-example](https://github.com/GuillaumeGomez/rustc-tools-example) to see how to
+/// write a cargo integration.
+///
 /// Don't forget to take a look at the [`TyCtxt`] and at the
 /// [`Map`](https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/hir/map/struct.Map.html)
 /// documentations.

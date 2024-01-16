@@ -57,6 +57,10 @@ impl Callbacks for Lints {
 /// will simply fail to compile and the `callback` won't be called. A good example of the list
 /// of the expected arguments can be seen when you run `cargo build -v`.
 ///
+/// Take a look at [`cargo_integration`](crate::cargo_integration) and at
+/// [rustc-tools-example](https://github.com/GuillaumeGomez/rustc-tools-example) to see how to
+/// write a cargo integration.
+///
 /// [`LintStore`]: https://doc.rust-lang.org/nightly/nightly-rustc/rustc_lint/struct.LintStore.html
 pub fn with_lints<F: Fn(&mut LintStore) + Send + Sync + 'static>(
     args: &[String],
@@ -82,6 +86,10 @@ pub fn with_lints<F: Fn(&mut LintStore) + Send + Sync + 'static>(
 /// need to pass the according options so that `rustc` knows where to look for them. otherwise it
 /// will simply fail to compile and the `callback` won't be called. A good example of the list
 /// of the expected arguments can be seen when you run `cargo build -v`.
+///
+/// Take a look at [`cargo_integration`](crate::cargo_integration) and at
+/// [rustc-tools-example](https://github.com/GuillaumeGomez/rustc-tools-example) to see how to
+/// write a cargo integration.
 ///
 /// [`LintStore`]: https://doc.rust-lang.org/nightly/nightly-rustc/rustc_lint/struct.LintStore.html
 pub fn with_lints_and_error_output<F: Fn(&mut LintStore) + Send + Sync + 'static>(
