@@ -43,6 +43,8 @@ pub fn cargo_integration<T, F: Fn(&[String]) -> T>(
 
     let mut command = Command::new("cargo")
         .args(&args)
+        // We silence warnings for the initial compilation.
+        .env("RUSTFLAGS", "-Awarnings")
         .stdout(Stdio::piped())
         .spawn()
         .unwrap();
