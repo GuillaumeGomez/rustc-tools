@@ -104,6 +104,14 @@
 <a href="#104" id="104">104</a>
 <a href="#105" id="105">105</a>
 <a href="#106" id="106">106</a>
+<a href="#107" id="107">107</a>
+<a href="#108" id="108">108</a>
+<a href="#109" id="109">109</a>
+<a href="#110" id="110">110</a>
+<a href="#111" id="111">111</a>
+<a href="#112" id="112">112</a>
+<a href="#113" id="113">113</a>
+<a href="#114" id="114">114</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(clippy::type_complexity)]
 
 </span><span class="kw">use </span><a href="https://doc.rust-lang.org/nightly/nightly-rustc/rustc_driver_impl/trait.Callbacks.html">rustc_driver::Callbacks</a>;
@@ -163,13 +171,17 @@
 /// will simply fail to compile and the `callback` won&#39;t be called. A good example of the list
 /// of the expected arguments can be seen when you run `cargo build -v`.
 ///
+/// Take a look at [`cargo_integration`](crate::cargo_integration) and at
+/// [rustc-tools-example](https://github.com/GuillaumeGomez/rustc-tools-example) to see how to
+/// write a cargo integration.
+///
 /// [`LintStore`]: https://doc.rust-lang.org/nightly/nightly-rustc/rustc_lint/struct.LintStore.html
 </span><span class="kw">pub fn </span><a href="../../rustc_tools/fn.with_lints.html">with_lints</a>&lt;F: Fn(<span class="kw-2">&amp;mut </span><a href="https://doc.rust-lang.org/nightly/nightly-rustc/rustc_lint/context/struct.LintStore.html">LintStore</a>) + <a href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html">Send</a> + <a href="https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html">Sync</a> + <span class="lifetime">&#39;static</span>&gt;(
     args: <span class="kw-2">&amp;</span>[<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>],
     tracked_files: Vec&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;,
     callback: F,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;(), <a href="https://doc.rust-lang.org/nightly/nightly-rustc/rustc_span/struct.ErrorGuaranteed.html">ErrorGuaranteed</a>&gt; {
-    <a href="#87-106">with_lints_and_error_output</a>(<a href="#62">args</a>, <a href="#63">tracked_files</a>, ErrorOutputType::default(), <a href="#64">callback</a>)
+    <a href="#95-114">with_lints_and_error_output</a>(<a href="#66">args</a>, <a href="#67">tracked_files</a>, ErrorOutputType::default(), <a href="#68">callback</a>)
 }
 
 <span class="doccomment">/// If you want to create a linter, this the function you want to use.
@@ -189,6 +201,10 @@
 /// will simply fail to compile and the `callback` won&#39;t be called. A good example of the list
 /// of the expected arguments can be seen when you run `cargo build -v`.
 ///
+/// Take a look at [`cargo_integration`](crate::cargo_integration) and at
+/// [rustc-tools-example](https://github.com/GuillaumeGomez/rustc-tools-example) to see how to
+/// write a cargo integration.
+///
 /// [`LintStore`]: https://doc.rust-lang.org/nightly/nightly-rustc/rustc_lint/struct.LintStore.html
 </span><span class="kw">pub fn </span>with_lints_and_error_output&lt;F: Fn(<span class="kw-2">&amp;mut </span><a href="https://doc.rust-lang.org/nightly/nightly-rustc/rustc_lint/context/struct.LintStore.html">LintStore</a>) + <a href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html">Send</a> + <a href="https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html">Sync</a> + <span class="lifetime">&#39;static</span>&gt;(
     args: <span class="kw-2">&amp;</span>[<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>],
@@ -196,8 +212,8 @@
     error_output: ErrorOutputType,
     callback: F,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;(), <a href="https://doc.rust-lang.org/nightly/nightly-rustc/rustc_span/struct.ErrorGuaranteed.html">ErrorGuaranteed</a>&gt; {
-    <span class="kw">let </span>handler = EarlyErrorHandler::new(<a href="#90">error_output</a>);
-    rustc_driver::init_rustc_env_logger(<span class="kw-2">&amp;</span><a href="#93">handler</a>);
+    <span class="kw">let </span>handler = EarlyErrorHandler::new(<a href="#98">error_output</a>);
+    rustc_driver::init_rustc_env_logger(<span class="kw-2">&amp;</span><a href="#101">handler</a>);
     rustc_driver::catch_fatal_errors(<span class="kw">move </span>|| {
         rustc_driver::RunCompiler::new(
             args,

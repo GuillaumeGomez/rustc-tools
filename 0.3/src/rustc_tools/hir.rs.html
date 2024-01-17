@@ -292,6 +292,10 @@
 <a href="#292" id="292">292</a>
 <a href="#293" id="293">293</a>
 <a href="#294" id="294">294</a>
+<a href="#295" id="295">295</a>
+<a href="#296" id="296">296</a>
+<a href="#297" id="297">297</a>
+<a href="#298" id="298">298</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><a href="https://doc.rust-lang.org/nightly/nightly-rustc/rustc_data_structures/marker/trait.DynSend.html">rustc_data_structures::marker::DynSend</a>;
 <span class="kw">use </span><a href="https://doc.rust-lang.org/nightly/alloc/rc/struct.Rc.html">rustc_data_structures::sync::Lrc</a>;
 <span class="kw">use </span><a href="https://doc.rust-lang.org/nightly/nightly-rustc/rustc_data_structures/unord/struct.UnordSet.html">rustc_data_structures::unord::UnordSet</a>;
@@ -329,6 +333,10 @@
 /// will simply fail to compile and the `callback` won&#39;t be called. A good example of the list
 /// of the expected arguments can be seen when you run `cargo build -v`.
 ///
+/// Take a look at [`cargo_integration`](crate::cargo_integration) and at
+/// [rustc-tools-example](https://github.com/GuillaumeGomez/rustc-tools-example) to see how to
+/// write a cargo integration.
+///
 /// Don&#39;t forget to take a look at the [`TyCtxt`] and at the
 /// [`Map`](https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/hir/map/struct.Map.html)
 /// documentations.
@@ -344,63 +352,63 @@
 ) -&gt; <span class="prelude-ty">Result</span>&lt;T, <a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt; {
     <span class="kw">let </span><span class="kw-2">mut </span>handler = EarlyErrorHandler::new(ErrorOutputType::default());
     <span class="comment">// Most of this code comes from rustdoc.
-    </span>rustc_driver::init_rustc_env_logger(<span class="kw-2">&amp;</span><a href="#51">handler</a>);
-    <span class="kw">let </span>args = rustc_driver::args::arg_expand_all(<span class="kw-2">&amp;</span><a href="#51">handler</a>, <a href="#48">rustc_args</a>);
+    </span>rustc_driver::init_rustc_env_logger(<span class="kw-2">&amp;</span><a href="#55">handler</a>);
+    <span class="kw">let </span>args = rustc_driver::args::arg_expand_all(<span class="kw-2">&amp;</span><a href="#55">handler</a>, <a href="#52">rustc_args</a>);
 
     <span class="kw">let </span><span class="kw-2">mut </span>options = getopts::Options::new();
     <span class="kw">for </span>option <span class="kw">in </span>rustc_optgroups() {
         (option.apply)(<span class="kw-2">&amp;mut </span>options);
     }
-    <span class="kw">let </span>matches = <span class="kw">match </span><a href="#56">options</a>.parse(<span class="kw-2">&amp;</span><a href="#54">args</a>[..]) {
-        <span class="prelude-val">Ok</span>(m) =&gt; <a href="#61">m</a>,
+    <span class="kw">let </span>matches = <span class="kw">match </span><a href="#60">options</a>.parse(<span class="kw-2">&amp;</span><a href="#58">args</a>[..]) {
+        <span class="prelude-val">Ok</span>(m) =&gt; <a href="#65">m</a>,
         <span class="prelude-val">Err</span>(err) =&gt; {
-            <a href="#51">handler</a>.early_error(<a href="#62">err</a>.<a href="https://doc.rust-lang.org/nightly/alloc/string/trait.ToString.html">to_string</a>());
+            <a href="#55">handler</a>.early_error(<a href="#66">err</a>.<a href="https://doc.rust-lang.org/nightly/alloc/string/trait.ToString.html">to_string</a>());
         }
     };
 
     <span class="comment">// Note that we discard any distinction between different non-zero exit
     // codes from `from_matches` here.
-    </span><span class="kw">let </span>config = <span class="kw">match </span><a href="#199-294">create_config</a>(<span class="kw-2">&amp;mut </span><a href="#51">handler</a>, <span class="kw-2">&amp;</span><a href="#60">matches</a>, <a href="#54">args</a>) {
-        <span class="prelude-val">Some</span>(opts) =&gt; <a href="#70">opts</a>,
+    </span><span class="kw">let </span>config = <span class="kw">match </span><a href="#203-298">create_config</a>(<span class="kw-2">&amp;mut </span><a href="#55">handler</a>, <span class="kw-2">&amp;</span><a href="#64">matches</a>, <a href="#58">args</a>) {
+        <span class="prelude-val">Some</span>(opts) =&gt; <a href="#74">opts</a>,
         <span class="prelude-val">None </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="string">&quot;Failed to create_config&quot;</span>.<a href="https://doc.rust-lang.org/nightly/alloc/borrow/trait.ToOwned.html">to_owned</a>()),
     };
 
-    interface::run_compiler(<a href="#69">config</a>, |compiler| {
-        <span class="kw">let </span>sess = <a href="#74">compiler</a>.session();
+    interface::run_compiler(<a href="#73">config</a>, |compiler| {
+        <span class="kw">let </span>sess = <a href="#78">compiler</a>.session();
 
         <span class="kw">if </span>sess.opts.describe_lints {
-            <a href="#75">sess</a>.diagnostic()
+            <a href="#79">sess</a>.diagnostic()
                 .err(<span class="string">&quot;`describe-lints` option is not allowed&quot;</span>);
             <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="string">&quot;`describe-lints` option is not allowed&quot;</span>.<a href="https://doc.rust-lang.org/nightly/alloc/borrow/trait.ToOwned.html">to_owned</a>());
         }
 
-        <a href="#74">compiler</a>.enter(|queries| {
+        <a href="#78">compiler</a>.enter(|queries| {
             <span class="kw">if </span>sess.diagnostic().has_errors_or_lint_errors().is_some() {
-                <a href="#75">sess</a>.fatal(<span class="string">&quot;Compilation failed, aborting&quot;</span>);
+                <a href="#79">sess</a>.fatal(<span class="string">&quot;Compilation failed, aborting&quot;</span>);
             }
 
-            <span class="kw">let </span><span class="kw-2">mut </span>global_ctxt = <a href="https://doc.rust-lang.org/nightly/nightly-rustc/rustc_driver_impl/fn.abort_on_err.html">abort_on_err</a>(<a href="#83">queries</a>.global_ctxt(), <a href="#75">sess</a>);
+            <span class="kw">let </span><span class="kw-2">mut </span>global_ctxt = <a href="https://doc.rust-lang.org/nightly/nightly-rustc/rustc_driver_impl/fn.abort_on_err.html">abort_on_err</a>(<a href="#87">queries</a>.global_ctxt(), <a href="#79">sess</a>);
 
-            <a href="#88">global_ctxt</a>.enter(|tcx| {
-                <a href="#90">tcx</a>.sess.time(<span class="string">&quot;type_collecting&quot;</span>, || {
-                    <a href="#90">tcx</a>.hir()
-                        .for_each_module(|module| <a href="#90">tcx</a>.ensure().collect_mod_item_types(<a href="#93">module</a>))
+            <a href="#92">global_ctxt</a>.enter(|tcx| {
+                <a href="#94">tcx</a>.sess.time(<span class="string">&quot;type_collecting&quot;</span>, || {
+                    <a href="#94">tcx</a>.hir()
+                        .for_each_module(|module| <a href="#94">tcx</a>.ensure().collect_mod_item_types(<a href="#97">module</a>))
                 });
-                <a href="#90">tcx</a>.sess.time(<span class="string">&quot;item_types_checking&quot;</span>, || {
-                    <a href="#90">tcx</a>.hir()
-                        .for_each_module(|module| <a href="#90">tcx</a>.ensure().check_mod_item_types(<a href="#97">module</a>))
+                <a href="#94">tcx</a>.sess.time(<span class="string">&quot;item_types_checking&quot;</span>, || {
+                    <a href="#94">tcx</a>.hir()
+                        .for_each_module(|module| <a href="#94">tcx</a>.ensure().check_mod_item_types(<a href="#101">module</a>))
                 });
-                <a href="#90">tcx</a>.sess.abort_if_errors();
-                <a href="#90">tcx</a>.sess.time(<span class="string">&quot;check_mod_attrs&quot;</span>, || {
-                    <a href="#90">tcx</a>.hir()
-                        .for_each_module(|module| <a href="#90">tcx</a>.ensure().check_mod_attrs(<a href="#102">module</a>))
+                <a href="#94">tcx</a>.sess.abort_if_errors();
+                <a href="#94">tcx</a>.sess.time(<span class="string">&quot;check_mod_attrs&quot;</span>, || {
+                    <a href="#94">tcx</a>.hir()
+                        .for_each_module(|module| <a href="#94">tcx</a>.ensure().check_mod_attrs(<a href="#106">module</a>))
                 });
-                rustc_passes::stability::check_unused_or_stable_features(<a href="#90">tcx</a>);
+                rustc_passes::stability::check_unused_or_stable_features(<a href="#94">tcx</a>);
                 <span class="kw">if </span>tcx.sess.diagnostic().has_errors_or_lint_errors().is_some() {
                     rustc_errors::FatalError.raise();
                 }
 
-                <span class="prelude-val">Ok</span>(<a href="#49">callback</a>(<a href="#90">tcx</a>))
+                <span class="prelude-val">Ok</span>(<a href="#53">callback</a>(<a href="#94">tcx</a>))
             })
         })
     })
@@ -412,29 +420,29 @@
     diag: <span class="kw-2">&amp;</span><a href="https://doc.rust-lang.org/nightly/nightly-rustc/rustc_errors/struct.Handler.html">rustc_errors::Handler</a>,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;Input&gt;, <a href="https://doc.rust-lang.org/nightly/nightly-rustc/rustc_span/struct.ErrorGuaranteed.html">ErrorGuaranteed</a>&gt; {
     <span class="kw">if </span>free_matches.len() == <span class="number">1 </span>{
-        <span class="kw">let </span>ifile = <span class="kw-2">&amp;</span><a href="#117">free_matches</a>[<span class="number">0</span>];
+        <span class="kw">let </span>ifile = <span class="kw-2">&amp;</span><a href="#121">free_matches</a>[<span class="number">0</span>];
         <span class="kw">if </span>ifile == <span class="string">&quot;-&quot; </span>{
             <span class="kw">let </span><span class="kw-2">mut </span>src = String::new();
             <span class="kw">if </span>io::stdin().read_to_string(<span class="kw-2">&amp;mut </span>src).is_err() {
                 <span class="comment">// Immediately stop compilation if there was an issue reading
                 // the input (for example if the input stream is not UTF-8).
-                </span><span class="kw">let </span>reported = <a href="#116">handler</a>.early_error_no_abort(
+                </span><span class="kw">let </span>reported = <a href="#120">handler</a>.early_error_no_abort(
                     <span class="string">&quot;couldn&#39;t read from stdin, as it did not contain valid UTF-8&quot;</span>,
                 );
-                <span class="kw">return </span><span class="prelude-val">Err</span>(<a href="#127">reported</a>);
+                <span class="kw">return </span><span class="prelude-val">Err</span>(<a href="#131">reported</a>);
             }
             <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(Input::Str {
-                name: FileName::anon_source_code(<span class="kw-2">&amp;</span><a href="#123">src</a>),
-                input: <a href="#123">src</a>,
+                name: FileName::anon_source_code(<span class="kw-2">&amp;</span><a href="#127">src</a>),
+                input: <a href="#127">src</a>,
             }))
         } <span class="kw">else </span>{
-            <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(Input::File(PathBuf::from(<a href="#121">ifile</a>))))
+            <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(Input::File(PathBuf::from(<a href="#125">ifile</a>))))
         }
     } <span class="kw">else if </span>free_matches.is_empty() {
-        <a href="#118">diag</a>.struct_err(<span class="string">&quot;missing file operand&quot;</span>).emit();
+        <a href="#122">diag</a>.struct_err(<span class="string">&quot;missing file operand&quot;</span>).emit();
         <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
     } <span class="kw">else </span>{
-        <a href="#118">diag</a>.struct_err(<span class="string">&quot;too many file operands&quot;</span>).emit();
+        <a href="#122">diag</a>.struct_err(<span class="string">&quot;too many file operands&quot;</span>).emit();
         <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
     }
 }
@@ -449,17 +457,17 @@
         rustc_driver::DEFAULT_LOCALE_RESOURCES.to_vec(),
         <span class="bool-val">false</span>,
     );
-    <span class="kw">let </span>emitter: Box&lt;<span class="kw">dyn </span><a href="https://doc.rust-lang.org/nightly/nightly-rustc/rustc_errors/emitter/trait.Emitter.html">Emitter</a> + <a href="https://doc.rust-lang.org/nightly/nightly-rustc/rustc_data_structures/marker/trait.DynSend.html">DynSend</a>&gt; = <span class="kw">match </span><a href="#149">error_format</a> {
+    <span class="kw">let </span>emitter: Box&lt;<span class="kw">dyn </span><a href="https://doc.rust-lang.org/nightly/nightly-rustc/rustc_errors/emitter/trait.Emitter.html">Emitter</a> + <a href="https://doc.rust-lang.org/nightly/nightly-rustc/rustc_data_structures/marker/trait.DynSend.html">DynSend</a>&gt; = <span class="kw">match </span><a href="#153">error_format</a> {
         ErrorOutputType::HumanReadable(kind) =&gt; {
-            <span class="kw">let </span>(short, color_config) = <a href="#159">kind</a>.unzip();
+            <span class="kw">let </span>(short, color_config) = <a href="#163">kind</a>.unzip();
             Box::new(
-                EmitterWriter::stderr(<a href="#160">color_config</a>, <a href="#154">fallback_bundle</a>)
-                    .sm(<a href="#150">source_map</a>.<a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html">clone</a>())
-                    .short_message(<a href="#160">short</a>)
-                    .teach(<a href="#152">unstable_opts</a>.teach)
-                    .diagnostic_width(<a href="#151">diagnostic_width</a>)
-                    .track_diagnostics(<a href="#152">unstable_opts</a>.track_diagnostics)
-                    .ui_testing(<a href="#152">unstable_opts</a>.ui_testing),
+                EmitterWriter::stderr(<a href="#164">color_config</a>, <a href="#158">fallback_bundle</a>)
+                    .sm(<a href="#154">source_map</a>.<a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html">clone</a>())
+                    .short_message(<a href="#164">short</a>)
+                    .teach(<a href="#156">unstable_opts</a>.teach)
+                    .diagnostic_width(<a href="#155">diagnostic_width</a>)
+                    .track_diagnostics(<a href="#156">unstable_opts</a>.track_diagnostics)
+                    .ui_testing(<a href="#156">unstable_opts</a>.ui_testing),
             )
         }
         ErrorOutputType::Json {
@@ -467,27 +475,27 @@
             json_rendered,
         } =&gt; {
             <span class="kw">let </span>source_map =
-                <a href="#150">source_map</a>.unwrap_or_else(|| Lrc::new(SourceMap::new(FilePathMapping::empty())));
+                <a href="#154">source_map</a>.unwrap_or_else(|| Lrc::new(SourceMap::new(FilePathMapping::empty())));
             Box::new(
                 JsonEmitter::stderr(
                     <span class="prelude-val">None</span>,
-                    <a href="#175">source_map</a>,
+                    <a href="#179">source_map</a>,
                     <span class="prelude-val">None</span>,
-                    <a href="#154">fallback_bundle</a>,
-                    <a href="#172">pretty</a>,
-                    <a href="#173">json_rendered</a>,
-                    <a href="#151">diagnostic_width</a>,
+                    <a href="#158">fallback_bundle</a>,
+                    <a href="#176">pretty</a>,
+                    <a href="#177">json_rendered</a>,
+                    <a href="#155">diagnostic_width</a>,
                     <span class="bool-val">false</span>,
-                    <a href="#152">unstable_opts</a>.track_diagnostics,
+                    <a href="#156">unstable_opts</a>.track_diagnostics,
                     rustc_errors::TerminalUrl::No,
                 )
-                .ui_testing(<a href="#152">unstable_opts</a>.ui_testing),
+                .ui_testing(<a href="#156">unstable_opts</a>.ui_testing),
             )
         }
     };
 
-    rustc_errors::Handler::with_emitter(<a href="#158">emitter</a>)
-        .with_flags(<a href="#152">unstable_opts</a>.diagnostic_handler_flags(<span class="bool-val">true</span>))
+    rustc_errors::Handler::with_emitter(<a href="#162">emitter</a>)
+        .with_flags(<a href="#156">unstable_opts</a>.diagnostic_handler_flags(<span class="bool-val">true</span>))
 }
 
 <span class="kw">fn </span>create_config(
@@ -495,75 +503,75 @@
     matches: <span class="kw-2">&amp;</span><a href="https://docs.rs/getopts/0.2.20/getopts/struct.Matches.html">getopts::Matches</a>,
     args: Vec&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;,
 ) -&gt; <span class="prelude-ty">Option</span>&lt;interface::Config&gt; {
-    <span class="kw">let </span>color = config::parse_color(<a href="#200">handler</a>, <a href="#201">matches</a>);
-    <span class="kw">let </span>config::JsonConfig { json_rendered, .. } = config::parse_json(<a href="#200">handler</a>, <a href="#201">matches</a>);
-    <span class="kw">let </span>error_format = config::parse_error_format(<a href="#200">handler</a>, <a href="#201">matches</a>, <a href="#204">color</a>, <a href="#205">json_rendered</a>);
-    <span class="kw">let </span>diagnostic_width = <a href="#201">matches</a>.opt_get(<span class="string">&quot;diagnostic-width&quot;</span>).unwrap_or_default();
+    <span class="kw">let </span>color = config::parse_color(<a href="#204">handler</a>, <a href="#205">matches</a>);
+    <span class="kw">let </span>config::JsonConfig { json_rendered, .. } = config::parse_json(<a href="#204">handler</a>, <a href="#205">matches</a>);
+    <span class="kw">let </span>error_format = config::parse_error_format(<a href="#204">handler</a>, <a href="#205">matches</a>, <a href="#208">color</a>, <a href="#209">json_rendered</a>);
+    <span class="kw">let </span>diagnostic_width = <a href="#205">matches</a>.opt_get(<span class="string">&quot;diagnostic-width&quot;</span>).unwrap_or_default();
 
-    <span class="kw">let </span>codegen_options = CodegenOptions::build(<a href="#200">handler</a>, <a href="#201">matches</a>);
-    <span class="kw">let </span>unstable_opts = UnstableOptions::build(<a href="#200">handler</a>, <a href="#201">matches</a>);
+    <span class="kw">let </span>codegen_options = CodegenOptions::build(<a href="#204">handler</a>, <a href="#205">matches</a>);
+    <span class="kw">let </span>unstable_opts = UnstableOptions::build(<a href="#204">handler</a>, <a href="#205">matches</a>);
 
-    <span class="kw">let </span>diag = <a href="#148-197">new_handler</a>(<a href="#206">error_format</a>, <span class="prelude-val">None</span>, <a href="#207">diagnostic_width</a>, <span class="kw-2">&amp;</span><a href="#210">unstable_opts</a>);
+    <span class="kw">let </span>diag = <a href="#152-201">new_handler</a>(<a href="#210">error_format</a>, <span class="prelude-val">None</span>, <a href="#211">diagnostic_width</a>, <span class="kw-2">&amp;</span><a href="#214">unstable_opts</a>);
 
-    <span class="kw">let </span>(lint_opts, describe_lints, lint_cap) = config::get_cmd_lint_options(<a href="#200">handler</a>, <a href="#201">matches</a>);
+    <span class="kw">let </span>(lint_opts, describe_lints, lint_cap) = config::get_cmd_lint_options(<a href="#204">handler</a>, <a href="#205">matches</a>);
 
-    <span class="kw">let </span>input = <span class="kw">match </span><a href="#115-146">make_input</a>(<a href="#200">handler</a>, <span class="kw-2">&amp;</span><a href="#201">matches</a>.free, <span class="kw-2">&amp;</span><a href="#212">diag</a>) {
-        <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(i)) =&gt; <a href="#217">i</a>,
+    <span class="kw">let </span>input = <span class="kw">match </span><a href="#119-150">make_input</a>(<a href="#204">handler</a>, <span class="kw-2">&amp;</span><a href="#205">matches</a>.free, <span class="kw-2">&amp;</span><a href="#216">diag</a>) {
+        <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(i)) =&gt; <a href="#221">i</a>,
         <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>) =&gt; {
             <span class="kw">return </span><span class="prelude-val">None</span>;
         }
         <span class="prelude-val">Err</span>(e) =&gt; {
-            <a href="#212">diag</a>.struct_err(<a class="macro" href="https://doc.rust-lang.org/nightly/alloc/macro.format.html">format!</a>(<span class="string">&quot;Failed to parse input: {:?}&quot;</span>, e))
+            <a href="#216">diag</a>.struct_err(<a class="macro" href="https://doc.rust-lang.org/nightly/alloc/macro.format.html">format!</a>(<span class="string">&quot;Failed to parse input: {:?}&quot;</span>, e))
                 .emit();
             <span class="kw">return </span><span class="prelude-val">None</span>;
         }
     };
 
-    <span class="kw">let </span>libs = <a href="#201">matches</a>
+    <span class="kw">let </span>libs = <a href="#205">matches</a>
         .opt_strs(<span class="string">&quot;L&quot;</span>)
         .iter()
-        .<a href="https://doc.rust-lang.org/nightly/core/iter/traits/iterator/trait.Iterator.html">map</a>(|s| SearchPath::from_cli_opt(<a href="#200">handler</a>, <a href="#231">s</a>))
+        .<a href="https://doc.rust-lang.org/nightly/core/iter/traits/iterator/trait.Iterator.html">map</a>(|s| SearchPath::from_cli_opt(<a href="#204">handler</a>, <a href="#235">s</a>))
         .<a href="https://doc.rust-lang.org/nightly/core/iter/traits/iterator/trait.Iterator.html">collect</a>();
-    <span class="kw">let </span>externs = parse_externs(<a href="#200">handler</a>, <a href="#201">matches</a>, <span class="kw-2">&amp;</span><a href="#210">unstable_opts</a>);
+    <span class="kw">let </span>externs = parse_externs(<a href="#204">handler</a>, <a href="#205">matches</a>, <span class="kw-2">&amp;</span><a href="#214">unstable_opts</a>);
 
-    <span class="kw">let </span>cfgs = <a href="#201">matches</a>.opt_strs(<span class="string">&quot;cfg&quot;</span>);
-    <span class="kw">let </span>check_cfgs = <a href="#201">matches</a>.opt_strs(<span class="string">&quot;check-cfg&quot;</span>);
+    <span class="kw">let </span>cfgs = <a href="#205">matches</a>.opt_strs(<span class="string">&quot;cfg&quot;</span>);
+    <span class="kw">let </span>check_cfgs = <a href="#205">matches</a>.opt_strs(<span class="string">&quot;check-cfg&quot;</span>);
 
-    <span class="kw">let </span>crate_types = <span class="kw">match </span>parse_crate_types_from_list(<a href="#201">matches</a>.opt_strs(<span class="string">&quot;crate-type&quot;</span>)) {
-        <span class="prelude-val">Ok</span>(types) =&gt; <a href="#239">types</a>,
+    <span class="kw">let </span>crate_types = <span class="kw">match </span>parse_crate_types_from_list(<a href="#205">matches</a>.opt_strs(<span class="string">&quot;crate-type&quot;</span>)) {
+        <span class="prelude-val">Ok</span>(types) =&gt; <a href="#243">types</a>,
         <span class="prelude-val">Err</span>(e) =&gt; {
-            <a href="#212">diag</a>.struct_err(<a class="macro" href="https://doc.rust-lang.org/nightly/alloc/macro.format.html">format!</a>(<span class="string">&quot;unknown crate type: {}&quot;</span>, e)).emit();
+            <a href="#216">diag</a>.struct_err(<a class="macro" href="https://doc.rust-lang.org/nightly/alloc/macro.format.html">format!</a>(<span class="string">&quot;unknown crate type: {}&quot;</span>, e)).emit();
             <span class="kw">return </span><span class="prelude-val">None</span>;
         }
     };
-    <span class="kw">let </span>crate_name = <a href="#201">matches</a>.opt_str(<span class="string">&quot;crate-name&quot;</span>);
+    <span class="kw">let </span>crate_name = <a href="#205">matches</a>.opt_str(<span class="string">&quot;crate-name&quot;</span>);
 
     <span class="kw">let </span>sessopts = config::Options {
-        maybe_sysroot: <a href="#201">matches</a>.opt_str(<span class="string">&quot;sysroot&quot;</span>).map(PathBuf::from),
-        search_paths: <a href="#228">libs</a>,
-        <a href="#238">crate_types</a>,
-        <a href="#214">lint_opts</a>,
-        <a href="#214">lint_cap</a>,
-        cg: <a href="#209">codegen_options</a>,
-        <a href="#233">externs</a>,
-        target_triple: config::parse_target_triple(<a href="#200">handler</a>, <a href="#201">matches</a>),
-        unstable_features: UnstableFeatures::from_environment(<a href="#245">crate_name</a>.as_deref()),
+        maybe_sysroot: <a href="#205">matches</a>.opt_str(<span class="string">&quot;sysroot&quot;</span>).map(PathBuf::from),
+        search_paths: <a href="#232">libs</a>,
+        <a href="#242">crate_types</a>,
+        <a href="#218">lint_opts</a>,
+        <a href="#218">lint_cap</a>,
+        cg: <a href="#213">codegen_options</a>,
+        <a href="#237">externs</a>,
+        target_triple: config::parse_target_triple(<a href="#204">handler</a>, <a href="#205">matches</a>),
+        unstable_features: UnstableFeatures::from_environment(<a href="#249">crate_name</a>.as_deref()),
         actually_rustdoc: <span class="bool-val">false</span>,
-        <a href="#210">unstable_opts</a>,
-        <a href="#206">error_format</a>,
-        <a href="#207">diagnostic_width</a>,
-        edition: config::parse_crate_edition(<a href="#200">handler</a>, <a href="#201">matches</a>),
-        <a href="#214">describe_lints</a>,
-        <a href="#245">crate_name</a>,
+        <a href="#214">unstable_opts</a>,
+        <a href="#210">error_format</a>,
+        <a href="#211">diagnostic_width</a>,
+        edition: config::parse_crate_edition(<a href="#204">handler</a>, <a href="#205">matches</a>),
+        <a href="#218">describe_lints</a>,
+        <a href="#249">crate_name</a>,
         test: <span class="bool-val">false</span>,
         ..Options::default()
     };
 
     <span class="prelude-val">Some</span>(interface::Config {
-        opts: <a href="#247">sessopts</a>,
-        crate_cfg: interface::parse_cfgspecs(<a href="#200">handler</a>, <a href="#235">cfgs</a>),
-        crate_check_cfg: interface::parse_check_cfg(<a href="#200">handler</a>, <a href="#236">check_cfgs</a>),
-        <a href="#216">input</a>,
+        opts: <a href="#251">sessopts</a>,
+        crate_cfg: interface::parse_cfgspecs(<a href="#204">handler</a>, <a href="#239">cfgs</a>),
+        crate_check_cfg: interface::parse_check_cfg(<a href="#204">handler</a>, <a href="#240">check_cfgs</a>),
+        <a href="#220">input</a>,
         output_file: <span class="prelude-val">None</span>,
         output_dir: <span class="prelude-val">None</span>,
         file_loader: <span class="prelude-val">None</span>,
@@ -572,18 +580,18 @@
         register_lints: <span class="prelude-val">None</span>,
         override_queries: <span class="prelude-val">Some</span>(|_sess, providers| {
             <span class="comment">// Most lints will require typechecking, so just don&#39;t run them.
-            </span><a href="#279">providers</a>.lint_mod = |<span class="kw">_</span>, <span class="kw">_</span>| {};
+            </span><a href="#283">providers</a>.lint_mod = |<span class="kw">_</span>, <span class="kw">_</span>| {};
             <span class="comment">// hack so that `used_trait_imports` won&#39;t try to call typeck
-            </span><a href="#279">providers</a>.used_trait_imports = |<span class="kw">_</span>, <span class="kw">_</span>| {
+            </span><a href="#283">providers</a>.used_trait_imports = |<span class="kw">_</span>, <span class="kw">_</span>| {
                 <span class="kw">static </span>EMPTY_SET: LazyLock&lt;UnordSet&lt;<a href="https://doc.rust-lang.org/nightly/nightly-rustc/rustc_span/def_id/struct.LocalDefId.html">LocalDefId</a>&gt;&gt; = LazyLock::new(UnordSet::default);
-                <span class="kw-2">&amp;</span><a href="#284">EMPTY_SET</a>
+                <span class="kw-2">&amp;</span><a href="#288">EMPTY_SET</a>
             };
         }),
         make_codegen_backend: <span class="prelude-val">None</span>,
         registry: rustc_driver::diagnostics_registry(),
         locale_resources: rustc_driver::DEFAULT_LOCALE_RESOURCES,
         ice_file: <span class="prelude-val">None</span>,
-        expanded_args: <a href="#202">args</a>,
+        expanded_args: <a href="#206">args</a>,
     })
 }
 </code></pre></div></section></main></body></html>
