@@ -4,6 +4,8 @@ Some internal rustc tools made accessible (by wrapping the setup part away).
 
 API documentation is available [here](https://guillaumegomez.github.io/rustc-tools/index.html).
 
+The versioning is following the official Rust version it's matching. So version `0.78` means it's on par with Rust `1.78`.
+
 ## Why would I need this crate?
 
 If you need to write a Rust compiler plugin (`clippy` and `rustdoc` are good examples of what a rustc plugin can achieve), a lot of setup is required to be able to use its APIs. This crate aims at removing this pain point so you can spend more time working on the plugin instead.

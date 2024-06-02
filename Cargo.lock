@@ -130,7 +130,7 @@ dependencies = [
 
 [[package]]
 name = "rustc-tools"
-version = "0.3.3"
+version = "0.78.0"
 dependencies = [
  "cargo_metadata",
  "term",
