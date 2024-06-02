@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["dummy_spanned","original_sp","respan"],"mod":["monotonic"],"struct":["FilePathMapping","RealFileLoader","SourceMap","SourceMapFiles","Spanned"],"trait":["FileLoader"]};

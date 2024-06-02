@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["expected_found","relate_args_invariantly","relate_args_with_variances","relate_type_and_mut","structurally_relate_consts","structurally_relate_tys"],"struct":["CoroutineWitness"],"trait":["Relate","TypeRelation"],"type":["RelateResult"]};

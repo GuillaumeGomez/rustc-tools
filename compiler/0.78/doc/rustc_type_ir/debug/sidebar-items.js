@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["NoInfcx","WithInfcx"],"trait":["DebugWithInfcx"]};

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["CallReturnPlaces","TerminatorEdges"],"struct":["SwitchTargetsIter","Terminator"],"type":["Successors","SuccessorsMut"]};

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["const_param_default"],"mod":["int","kind","valtree"],"struct":["Const","ConstData"],"type":["ConstKind"]};

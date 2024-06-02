@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["AssertLintKind","ConstMutate"],"struct":["AssertLint","FfiUnwindCall","FnItemRef","MustNotSupend","MustNotSuspendReason","RequiresUnsafe","RequiresUnsafeDetail","UnalignedPackedRef","UnsafeOpInUnsafeFn","UnusedUnsafe"]};

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["InferSourceKind","TypeAnnotationNeeded","UnderspecifiedArgKind"],"fn":["closure_as_fn_str","fmt_printer","ty_to_string"],"struct":["FindInferSourceVisitor","InferSource","InferenceDiagnosticsData","InferenceDiagnosticsParentData","InsertableGenericArgs"]};

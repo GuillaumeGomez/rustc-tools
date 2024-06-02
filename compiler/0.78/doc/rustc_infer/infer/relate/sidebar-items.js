@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["StructurallyRelateAliases"],"mod":["combine","generalize","glb","higher_ranked","lattice","lub","type_relating"]};

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["MetaVarExpr"],"fn":["check_trailing_token","eat_dollar","parse_count","parse_depth","parse_ident","try_eat_comma"]};

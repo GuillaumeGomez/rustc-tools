@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["MAX_CHECK_CFG_NAMES_OR_VALUES"],"fn":["builtin","check_cfg_expected_note"]};

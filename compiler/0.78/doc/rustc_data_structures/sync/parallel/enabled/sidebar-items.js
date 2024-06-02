@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["join","par_for_each_in","par_map","scope","try_par_for_each_in"]};

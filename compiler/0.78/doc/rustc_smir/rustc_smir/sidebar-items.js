@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["new_item_kind","smir_crate"],"mod":["alloc","builder","context","convert"],"struct":["Tables"],"trait":["Stable"]};

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["fetch_eligible_assoc_item_def"],"mod":["anon_const","inherent","opaque_types","weak_types"]};

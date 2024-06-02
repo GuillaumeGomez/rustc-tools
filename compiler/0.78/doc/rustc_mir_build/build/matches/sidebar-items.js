@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["TestBranch","TestCase","TestKind"],"fn":["traverse_candidate"],"mod":["simplify","test","util"],"struct":["ArmHasGuard","Ascription","Binding","Candidate","FlatPat","MatchPair","PatternExtraData","Test","ThenElseArgs"]};

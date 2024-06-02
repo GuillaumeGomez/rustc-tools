@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["BcbMappingKind"],"fn":["generate_coverage_spans"],"mod":["from_mir"],"struct":["BcbMapping","CoverageSpans","CurrCovspan","PrevCovspan","RefinedCovspan","SpansRefiner"]};

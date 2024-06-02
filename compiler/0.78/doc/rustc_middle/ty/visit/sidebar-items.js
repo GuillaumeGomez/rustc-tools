@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["LateBoundRegionsCollector","MaxUniverse","ValidateBoundVars"],"trait":["TypeSuperVisitable","TypeVisitable","TypeVisitableExt","TypeVisitor"]};

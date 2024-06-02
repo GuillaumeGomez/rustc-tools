@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["super_predicates_for_pretty_printing","supertraits_for_pretty_printing"],"struct":["Elaborator"]};

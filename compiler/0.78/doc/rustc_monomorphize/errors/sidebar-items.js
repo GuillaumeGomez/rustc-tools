@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["CouldntDumpMonoStats","EncounteredErrorWhileInstantiating","LargeAssignmentsLint","NoOptimizedMir","RecursionLimit","StartNotFound","SymbolAlreadyDefined","TypeLengthLimit","UnknownCguCollectionMode","UnusedGenericParamsHint"]};

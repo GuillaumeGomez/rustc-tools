@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["visit_opaque"],"struct":["Location","PlaceContext","PlaceRef"],"trait":["MirVisitor"]};

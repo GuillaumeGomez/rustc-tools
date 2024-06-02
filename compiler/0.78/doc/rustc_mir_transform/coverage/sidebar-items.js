@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["check_code_region","create_mappings","extract_hir_info","hash_mir_source","inject_coverage_statements","inject_edge_counter_basic_block","inject_statement","instrument_function_for_coverage","make_code_region"],"mod":["counters","graph","query","spans"],"struct":["ExtractedHirInfo","InstrumentCoverage"]};

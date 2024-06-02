@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["CovTerm","CoverageKind","MappingKind","Op"],"struct":["BlockMarkerId","BranchInfo","BranchSpan","CodeRegion","CounterId","Expression","ExpressionId","FunctionCoverageInfo","Mapping"]};

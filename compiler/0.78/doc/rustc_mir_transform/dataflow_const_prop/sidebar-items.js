@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["BLOCK_LIMIT","PLACE_LIMIT"],"fn":["propagatable_scalar","try_write_constant"],"macro":["throw_machine_stop_str"],"struct":["Collector","ConstAnalysis","DataflowConstProp","DummyMachine","OperandCollector","Patch"]};

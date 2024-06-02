@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["CandidateSource","Certainty","GoalSource","IsNormalizesToHack","MaybeCause"],"mod":["cache","inspect"],"struct":["CacheData","EvaluationCache","ExternalConstraints","ExternalConstraintsData","Goal","PredefinedOpaques","PredefinedOpaquesData","QueryInput","Response"],"type":["CanonicalInput","CanonicalResponse","QueryResult"]};

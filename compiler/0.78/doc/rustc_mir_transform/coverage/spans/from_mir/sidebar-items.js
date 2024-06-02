@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["bcb_to_initial_coverage_spans","extract_branch_mappings","filtered_statement_span","filtered_terminator_span","is_closure_like","mir_to_initial_sorted_coverage_spans","remove_unwanted_macro_spans","split_visible_macro_spans","unexpand_into_body_span_with_prev","unexpand_into_body_span_with_visible_macro"],"struct":["SpanFromMir"]};
