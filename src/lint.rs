@@ -1,11 +1,12 @@
 #![allow(clippy::type_complexity)]
 
 use rustc_driver::Callbacks;
+use rustc_errors::FatalError;
 use rustc_interface::interface::Config;
 use rustc_lint::LintStore;
 use rustc_session::config::ErrorOutputType;
-use rustc_session::EarlyErrorHandler;
-use rustc_span::{ErrorGuaranteed, Symbol};
+use rustc_session::EarlyDiagCtxt;
+use rustc_span::Symbol;
 
 use std::sync::Arc;
 
@@ -21,7 +22,7 @@ impl Callbacks for Lints {
         let previous = config.register_lints.take();
 
         let tracked_files = Arc::clone(&self.tracked_files);
-        config.parse_sess_created = Some(Box::new(move |parse_sess| {
+        config.psess_created = Some(Box::new(move |parse_sess| {
             // In here, we insert the files that, if modified, will tell cargo that the command
             // needs to be re-run.
             if tracked_files.is_empty() {
@@ -66,7 +67,7 @@ pub fn with_lints<F: Fn(&mut LintStore) + Send + Sync + 'static>(
     args: &[String],
     tracked_files: Vec<String>,
     callback: F,
-) -> Result<(), ErrorGuaranteed> {
+) -> Result<(), FatalError> {
     with_lints_and_error_output(args, tracked_files, ErrorOutputType::default(), callback)
 }
 
@@ -97,10 +98,10 @@ pub fn with_lints_and_error_output<F: Fn(&mut LintStore) + Send + Sync + 'static
     tracked_files: Vec<String>,
     error_output: ErrorOutputType,
     callback: F,
-) -> Result<(), ErrorGuaranteed> {
-    let handler = EarlyErrorHandler::new(error_output);
+) -> Result<(), FatalError> {
+    let handler = EarlyDiagCtxt::new(error_output);
     rustc_driver::init_rustc_env_logger(&handler);
-    rustc_driver::catch_fatal_errors(move || {
+    if rustc_driver::catch_fatal_errors(move || {
         rustc_driver::RunCompiler::new(
             args,
             &mut Lints {
@@ -110,5 +111,11 @@ pub fn with_lints_and_error_output<F: Fn(&mut LintStore) + Send + Sync + 'static
         )
         .run()
         .map(|_| ())
-    })?
+    })
+    .is_err()
+    {
+        Err(FatalError)
+    } else {
+        Ok(())
+    }
 }
