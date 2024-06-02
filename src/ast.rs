@@ -111,6 +111,7 @@ fn default_dcx(
     }))
 }
 
+#[allow(clippy::arc_with_non_send_sync)]
 fn create_parser_session() -> ParseSess {
     let source_map = Lrc::new(SourceMap::new(FilePathMapping::empty()));
     let can_reset_errors = Lrc::new(AtomicBool::new(false));

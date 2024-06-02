@@ -88,7 +88,7 @@ pub fn cargo_integration<T, F: Fn(&[String]) -> T>(
         rustc_args.push(format!("feature=\"{feature}\""));
     }
     rustc_args.push("-L".to_string());
-    match artifact.filenames.get(0).and_then(|path| path.parent()) {
+    match artifact.filenames.first().and_then(|path| path.parent()) {
         Some(path) => {
             rustc_args.push(format!("dependency={}", path.as_str()));
         }
@@ -96,7 +96,7 @@ pub fn cargo_integration<T, F: Fn(&[String]) -> T>(
     }
     for artifact in artifacts {
         rustc_args.push("--extern".to_string());
-        match artifact.filenames.get(0) {
+        match artifact.filenames.first() {
             Some(path) => rustc_args.push(format!(
                 "{}={}",
                 artifact.target.name.replace('-', "_"),

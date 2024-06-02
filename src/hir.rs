@@ -143,6 +143,7 @@ fn make_input(
     }
 }
 
+#[allow(clippy::arc_with_non_send_sync)]
 fn new_dcx(
     error_format: ErrorOutputType,
     source_map: Option<Lrc<SourceMap>>,
