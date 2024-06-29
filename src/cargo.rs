@@ -55,11 +55,7 @@ pub fn cargo_integration<T, F: Fn(&[String]) -> T>(
 
     for message in cargo_metadata::Message::parse_stream(reader) {
         match message.unwrap() {
-            Message::CompilerArtifact(artifact) => {
-                if artifact.target.is_bin() || artifact.target.is_lib() {
-                    artifacts.push(artifact);
-                }
-            }
+            Message::CompilerArtifact(artifact) => artifacts.push(artifact),
             _ => {
                 // not handled.
             }

@@ -36,3 +36,22 @@ jobs:
       - run: cargo run --example hir -- asset/example_file.rs
       - run: cargo build --example lint
       - run: (cargo run --example lint -- asset/example_file.rs && exit 1) || exit 0
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run tests
+        run: |
+          git clone "https://github.com/GuillaumeGomez/rustc-tools-example"
+          cd rustc-tools-example
+          git checkout v0.78.0
+          cd cargo-tools-inner
+          : # We make it target the current `rustc-tools`
+          sed -ie 's|rustc\-tools = "[[:digit:]]\+\.[[:digit:]]\+\.[[:digit:]]\+"|rustc\-tools = \{ path = "../../" \}|' Cargo.toml
+          cargo install --path .
+          cd ../cargo-tools
+          cargo install --path .
+          cd ../../tests
+          : # We ensure that the lints are run.
+          cargo tools 2>&1 | grep 'functions with odd number of lines should not exist'
