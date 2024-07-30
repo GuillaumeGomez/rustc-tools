@@ -125,10 +125,7 @@ fn create_parser_session() -> ParseSess {
 }
 
 fn create_parser<'a>(file: &Path, sess: &'a ParseSess) -> Result<Parser<'a>, String> {
-    catch_unwind(AssertUnwindSafe(move || {
-        new_parser_from_file(sess, file, None)
-    }))
-    .map_err(|e| format!("failed to create parser: {:?}", e))
+    new_parser_from_file(sess, file, None).map_err(|e| format!("failed to create parser: {:?}", e))
 }
 
 fn parse_crate(parser: &mut Parser) -> Result<Crate, String> {
