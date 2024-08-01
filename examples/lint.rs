@@ -48,7 +48,9 @@ impl EarlyLintPass for WarnGenerics {
             if generics.params.is_empty() {
                 return;
             }
-            cx.span_lint(WARN_GENERICS, generics.span, "generics are ugly", |_| {});
+            cx.span_lint(WARN_GENERICS, generics.span, |diag| {
+                diag.primary_message("generics are ugly");
+            });
         }
     }
 }
@@ -84,12 +86,9 @@ impl LateLintPass<'_> for OddFunctionLineCount {
             let code = &code[1..code.len() - 1];
             if !code.is_empty() && code.split('\n').count() % 2 != 0 {
                 // This is an odd number of lines, we don't allow that!
-                cx.span_lint(
-                    ODD_FUNCTION_LINE_COUNT,
-                    span,
-                    "functions with odd number of lines should not exist",
-                    |_| {},
-                );
+                cx.span_lint(ODD_FUNCTION_LINE_COUNT, span, |diag| {
+                    diag.primary_message("functions with odd number of lines should not exist");
+                });
             }
         }
     }

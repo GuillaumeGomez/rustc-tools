@@ -124,7 +124,7 @@ fn make_input(
     free_matches: &[String],
 ) -> Result<Input, ErrorGuaranteed> {
     match free_matches {
-        [] => dcx.fatal("missing file operand"),
+        [] => dcx.handle().fatal("missing file operand"),
         [input] if input == "-" => {
             let mut src = String::new();
             if io::stdin().read_to_string(&mut src).is_err() {
@@ -139,7 +139,7 @@ fn make_input(
             })
         }
         [input] => Ok(Input::File(PathBuf::from(input))),
-        _ => dcx.fatal("too many file operands"),
+        _ => dcx.handle().fatal("too many file operands"),
     }
 }
 
@@ -212,7 +212,8 @@ fn create_config(
     let input = match make_input(early_dcx, &dcx, &matches.free) {
         Ok(i) => i,
         Err(e) => {
-            dcx.struct_err(format!("Failed to parse input: {:?}", e))
+            dcx.handle()
+                .struct_err(format!("Failed to parse input: {:?}", e))
                 .emit();
             return None;
         }
@@ -243,7 +244,9 @@ fn create_config(
     let crate_types = match parse_crate_types_from_list(matches.opt_strs("crate-type")) {
         Ok(types) => types,
         Err(e) => {
-            dcx.struct_err(format!("unknown crate type: {}", e)).emit();
+            dcx.handle()
+                .struct_err(format!("unknown crate type: {}", e))
+                .emit();
             return None;
         }
     };

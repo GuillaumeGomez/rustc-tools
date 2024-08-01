@@ -1,5 +1,4 @@
 #![feature(rustc_private)]
-#![feature(lazy_cell)]
 #![cfg_attr(doc, doc = include_str!("../README.md"))]
 
 // We need to import them like this otherwise it doesn't work.

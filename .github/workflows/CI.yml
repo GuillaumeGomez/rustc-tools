@@ -45,7 +45,6 @@ jobs:
         run: |
           git clone "https://github.com/GuillaumeGomez/rustc-tools-example"
           cd rustc-tools-example
-          git checkout v0.78.0
           cd cargo-tools-inner
           : # We make it target the current `rustc-tools`
           sed -ie 's|rustc\-tools = "[[:digit:]]\+\.[[:digit:]]\+\.[[:digit:]]\+"|rustc\-tools = \{ path = "../../" \}|' Cargo.toml
