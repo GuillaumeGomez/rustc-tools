@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["add_unused_function_coverage","add_unused_functions","encode_mappings_for_function","finalize","generate_coverage_map","prepare_usage_sets","save_function_record"],"struct":["GlobalFileTable","LocalFileId","UsageSets","VirtualFileMapping"]};

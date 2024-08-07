@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["CtfeValidationMode","PathElem"],"fn":["mutability","write_path"],"macro":["throw_validation_failure","try_validation"],"struct":["RefTracking","ValidityVisitor"]};

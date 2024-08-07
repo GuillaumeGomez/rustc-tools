@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["BuiltinImplSource","CandidateSource","Certainty","GoalSource","MaybeCause","Reveal","SolverMode"],"mod":["inspect"],"struct":["CacheData","ExternalConstraintsData","Goal","NestedNormalizationGoals","NoSolution","PredefinedOpaquesData","QueryInput","Response"],"type":["CanonicalInput","CanonicalResponse","QueryResult"]};

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["covfun_section_name","create_pgo_func_name_var","hash_bytes","mapping_version","save_cov_data_to_mod","save_func_record_to_mod","write_filenames_section_to_buffer","write_mapping_to_buffer"],"mod":["ffi","map_data","mapgen"],"struct":["CrateCoverageContext"]};

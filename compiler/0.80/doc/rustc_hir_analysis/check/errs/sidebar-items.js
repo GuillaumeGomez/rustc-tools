@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["handle_static_mut_ref","maybe_expr_static_mut","maybe_stmt_static_mut","path_if_static_mut"]};

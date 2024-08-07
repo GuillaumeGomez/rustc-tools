@@ -1,0 +1,1 @@
+searchState.loadedDescShard("rustc_llvm", 0, "Appending to a Rust string – used by …\nReturns the argument unchanged.\nInitialize targets enabled by the build script via …\nCalls <code>U::from(self)</code>.")

@@ -1,0 +1,3 @@
+(function() {var implementors = {
+"rustc_next_trait_solver":[["impl&lt;D, I&gt; ProofTreeBuilder&lt;I&gt; for <a class=\"struct\" href=\"rustc_next_trait_solver/solve/inspect/build/struct.ProofTreeBuilder.html\" title=\"struct rustc_next_trait_solver::solve::inspect::build::ProofTreeBuilder\">ProofTreeBuilder</a>&lt;D&gt;<div class=\"where\">where\n    D: <a class=\"trait\" href=\"rustc_next_trait_solver/delegate/trait.SolverDelegate.html\" title=\"trait rustc_next_trait_solver::delegate::SolverDelegate\">SolverDelegate</a>&lt;Interner = I&gt;,\n    I: Interner,</div>"]]
+};if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

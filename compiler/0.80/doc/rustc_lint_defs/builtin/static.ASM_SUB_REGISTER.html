@@ -1,0 +1,34 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="The `asm_sub_register` lint detects using only a subset of a register for inline asm inputs."><title>ASM_SUB_REGISTER in rustc_lint_defs::builtin - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-5ca6ca2a1f83705a.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="rustc_lint_defs" data-themes="" data-resource-suffix="" data-rustdoc-version="1.82.0-dev" data-channel="nightly" data-search-js="search-d234aafac6c221dd.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="sidebar-items.js"></script><script defer src="../../static.files/main-d2fab2bf619172d3.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-df360f571f6edeae.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc static"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../../rustc_lint_defs/index.html">rustc_lint_defs</a><span class="version">1.82.0-dev</span></h2></div><div class="sidebar-elems"><h2><a href="index.html">In rustc_lint_defs::builtin</a></h2></div></nav><div class="sidebar-resizer"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1>Static <a href="../index.html">rustc_lint_defs</a>::<wbr><a href="index.html">builtin</a>::<wbr><a class="static" href="#">ASM_SUB_REGISTER</a><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><span class="out-of-band"><a class="src" href="../../src/rustc_lint_defs/builtin.rs.html#2455-2505">source</a> · <button id="toggle-all-docs" title="collapse all docs">[<span>&#x2212;</span>]</button></span></div><pre class="rust item-decl"><code>pub static ASM_SUB_REGISTER: &amp;<a class="struct" href="../struct.Lint.html" title="struct rustc_lint_defs::Lint">Lint</a></code></pre><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>The <code>asm_sub_register</code> lint detects using only a subset of a register
+for inline asm inputs.</p>
+<h4 id="example"><a class="doc-anchor" href="#example">§</a>Example</h4>
+<div class="example-wrap ignore"><a href="#" class="tooltip" title="This example is not tested">ⓘ</a><pre class="rust rust-example-rendered"><code><span class="attr">#[cfg(target_arch=<span class="string">"x86_64"</span>)]
+</span><span class="kw">use </span>std::arch::asm;
+
+<span class="kw">fn </span>main() {
+    <span class="attr">#[cfg(target_arch=<span class="string">"x86_64"</span>)]
+    </span><span class="kw">unsafe </span>{
+        <span class="macro">asm!</span>(<span class="string">"mov {0}, {0}"</span>, <span class="kw">in</span>(reg) <span class="number">0i16</span>);
+    }
+}</code></pre></div>
+<p>This will produce:</p>
+<div class="example-wrap"><pre class="language-text"><code>warning: formatting may not be suitable for sub-register argument
+ --&gt; src/main.rs:7:19
+  |
+7 |         asm!(&quot;mov {0}, {0}&quot;, in(reg) 0i16);
+  |                   ^^^  ^^^           ---- for this argument
+  |
+  = note: `#[warn(asm_sub_register)]` on by default
+  = help: use the `x` modifier to have the register formatted as `ax`
+  = help: or use the `r` modifier to keep the default formatting of `rax`
+</code></pre></div><h4 id="explanation"><a class="doc-anchor" href="#explanation">§</a>Explanation</h4>
+<p>Registers on some architectures can use different names to refer to a
+subset of the register. By default, the compiler will use the name for
+the full register size. To explicitly use a subset of the register,
+you can override the default by using a modifier on the template
+string operand to specify when subregister to use. This lint is issued
+if you pass in a value with a smaller data type than the default
+register size, to alert you of possibly using the incorrect width. To
+fix this, add the suggested modifier to the template, or cast the
+value to the correct size.</p>
+<p>See <a href="https://doc.rust-lang.org/nightly/reference/inline-assembly.html#template-modifiers">register template modifiers</a> in the reference for more details.</p>
+</div></details></section></div></main></body></html>

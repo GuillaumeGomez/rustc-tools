@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["CycleKind","StepResult","UsageKind"],"mod":["global_cache","validate"],"struct":["AvailableDepth","DetachedEntry","GlobalCache","ProvisionalCacheEntry","SearchGraph","StackDepth","StackEntry"],"trait":["Cx","Delegate","ProofTreeBuilder"]};

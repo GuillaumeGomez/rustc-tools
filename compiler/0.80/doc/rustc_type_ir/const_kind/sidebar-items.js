@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["ConstKind","InferConst"],"struct":["ConstVid","EffectVid","UnevaluatedConst"]};

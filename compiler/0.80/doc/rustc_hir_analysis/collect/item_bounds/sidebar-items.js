@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["associated_type_bounds","explicit_item_bounds","explicit_item_bounds_with_filter","explicit_item_super_predicates","item_bounds","item_non_self_assumptions","item_super_predicates","opaque_type_bounds"],"struct":["AssocTyToOpaque"]};

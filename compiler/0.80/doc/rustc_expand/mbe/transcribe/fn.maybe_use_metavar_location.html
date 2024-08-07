@@ -1,0 +1,37 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Store the metavariable span for this original span into a side table. FIXME: Try to put the metavariable span into `SpanData` instead of a side table (#118517). An optimal encoding for inlined spans will need to be selected to minimize regressions. The side table approach is relatively good, but not perfect due to collisions. In particular, collisions happen when token is passed as an argument through several macro calls, like in recursive macros. The old heuristic below is used to improve spans in case of collisions, but diagnostics are still degraded sometimes in those cases."><title>maybe_use_metavar_location in rustc_expand::mbe::transcribe - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-5ca6ca2a1f83705a.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="rustc_expand" data-themes="" data-resource-suffix="" data-rustdoc-version="1.82.0-dev" data-channel="nightly" data-search-js="search-d234aafac6c221dd.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="sidebar-items.js"></script><script defer src="../../../static.files/main-d2fab2bf619172d3.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-df360f571f6edeae.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc fn"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button><a class="logo-container" href="../../../rustc_expand/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt=""></a></nav><nav class="sidebar"><div class="sidebar-crate"><a class="logo-container" href="../../../rustc_expand/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><h2><a href="../../../rustc_expand/index.html">rustc_expand</a><span class="version">1.82.0-dev</span></h2></div><div class="sidebar-elems"><h2><a href="index.html">In rustc_expand::mbe::transcribe</a></h2></div></nav><div class="sidebar-resizer"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1>Function <a href="../../index.html">rustc_expand</a>::<wbr><a href="../index.html">mbe</a>::<wbr><a href="index.html">transcribe</a>::<wbr><a class="fn" href="#">maybe_use_metavar_location</a><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><span class="out-of-band"><a class="src" href="../../../src/rustc_expand/mbe/transcribe.rs.html#386-447">source</a> · <button id="toggle-all-docs" title="collapse all docs">[<span>&#x2212;</span>]</button></span></div><pre class="rust item-decl"><code>fn maybe_use_metavar_location(
+    psess: &amp;<a class="struct" href="../../../rustc_session/parse/struct.ParseSess.html" title="struct rustc_session::parse::ParseSess">ParseSess</a>,
+    stack: &amp;[<a class="struct" href="struct.Frame.html" title="struct rustc_expand::mbe::transcribe::Frame">Frame</a>&lt;'_&gt;],
+    metavar_span: <a class="struct" href="../../../rustc_span/span_encoding/struct.Span.html" title="struct rustc_span::span_encoding::Span">Span</a>,
+    orig_tt: &amp;<a class="enum" href="../../../rustc_ast/tokenstream/enum.TokenTree.html" title="enum rustc_ast::tokenstream::TokenTree">TokenTree</a>,
+    marker: &amp;mut <a class="struct" href="struct.Marker.html" title="struct rustc_expand::mbe::transcribe::Marker">Marker</a>,
+) -&gt; <a class="enum" href="../../../rustc_ast/tokenstream/enum.TokenTree.html" title="enum rustc_ast::tokenstream::TokenTree">TokenTree</a></code></pre><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Store the metavariable span for this original span into a side table.
+FIXME: Try to put the metavariable span into <code>SpanData</code> instead of a side table (#118517).
+An optimal encoding for inlined spans will need to be selected to minimize regressions.
+The side table approach is relatively good, but not perfect due to collisions.
+In particular, collisions happen when token is passed as an argument through several macro
+calls, like in recursive macros.
+The old heuristic below is used to improve spans in case of collisions, but diagnostics are
+still degraded sometimes in those cases.</p>
+<p>The old heuristic:</p>
+<p>Usually metavariables <code>$var</code> produce interpolated tokens, which have an additional place for
+keeping both the original span and the metavariable span. For <code>tt</code> metavariables that’s not the
+case however, and there’s no place for keeping a second span. So we try to give the single
+produced span a location that would be most useful in practice (the hygiene part of the span
+must not be changed).</p>
+<p>Different locations are useful for different purposes:</p>
+<ul>
+<li>The original location is useful when we need to report a diagnostic for the original token in
+isolation, without combining it with any surrounding tokens. This case occurs, but it is not
+very common in practice.</li>
+<li>The metavariable location is useful when we need to somehow combine the token span with spans
+of its surrounding tokens. This is the most common way to use token spans.</li>
+</ul>
+<p>So this function replaces the original location with the metavariable location in all cases
+except these two:</p>
+<ul>
+<li>The metavariable is an element of undelimited sequence <code>$($tt)*</code>.
+These are typically used for passing larger amounts of code, and tokens in that code usually
+combine with each other and not with tokens outside of the sequence.</li>
+<li>The metavariable span comes from a different crate, then we prefer the more local span.</li>
+</ul>
+</div></details></section></div></main></body></html>

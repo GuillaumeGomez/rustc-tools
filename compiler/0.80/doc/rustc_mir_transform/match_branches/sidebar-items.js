@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["CompareType","TransfromType"],"struct":["MatchBranchSimplification","SimplifyToExp","SimplifyToIf"],"trait":["SimplifyMatch"]};

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["check_fn","extract_def_id_from_arg"],"static":["IMPL_TRAIT_OVERCAPTURES","IMPL_TRAIT_REDUNDANT_CAPTURES"],"struct":["ImplTraitOvercaptures","ImplTraitOvercapturesLint","ImplTraitRedundantCapturesLint","VisitOpaqueTypes"]};

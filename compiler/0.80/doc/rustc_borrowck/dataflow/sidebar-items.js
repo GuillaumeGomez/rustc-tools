@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["calculate_borrows_out_of_scope_at_location"],"struct":["BorrowIndex","BorrowckFlowState","BorrowckResults","Borrows","OutOfScopePrecomputer","PoloniusOutOfScopePrecomputer"]};

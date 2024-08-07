@@ -1,0 +1,197 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `compiler/rustc_type_ir/src/infer_ctxt.rs`."><title>infer_ctxt.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-5ca6ca2a1f83705a.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="rustc_type_ir" data-themes="" data-resource-suffix="" data-rustdoc-version="1.82.0-dev" data-channel="nightly" data-search-js="search-d234aafac6c221dd.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-d2fab2bf619172d3.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-df360f571f6edeae.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<a href="#2" id="2">2</a>
+<a href="#3" id="3">3</a>
+<a href="#4" id="4">4</a>
+<a href="#5" id="5">5</a>
+<a href="#6" id="6">6</a>
+<a href="#7" id="7">7</a>
+<a href="#8" id="8">8</a>
+<a href="#9" id="9">9</a>
+<a href="#10" id="10">10</a>
+<a href="#11" id="11">11</a>
+<a href="#12" id="12">12</a>
+<a href="#13" id="13">13</a>
+<a href="#14" id="14">14</a>
+<a href="#15" id="15">15</a>
+<a href="#16" id="16">16</a>
+<a href="#17" id="17">17</a>
+<a href="#18" id="18">18</a>
+<a href="#19" id="19">19</a>
+<a href="#20" id="20">20</a>
+<a href="#21" id="21">21</a>
+<a href="#22" id="22">22</a>
+<a href="#23" id="23">23</a>
+<a href="#24" id="24">24</a>
+<a href="#25" id="25">25</a>
+<a href="#26" id="26">26</a>
+<a href="#27" id="27">27</a>
+<a href="#28" id="28">28</a>
+<a href="#29" id="29">29</a>
+<a href="#30" id="30">30</a>
+<a href="#31" id="31">31</a>
+<a href="#32" id="32">32</a>
+<a href="#33" id="33">33</a>
+<a href="#34" id="34">34</a>
+<a href="#35" id="35">35</a>
+<a href="#36" id="36">36</a>
+<a href="#37" id="37">37</a>
+<a href="#38" id="38">38</a>
+<a href="#39" id="39">39</a>
+<a href="#40" id="40">40</a>
+<a href="#41" id="41">41</a>
+<a href="#42" id="42">42</a>
+<a href="#43" id="43">43</a>
+<a href="#44" id="44">44</a>
+<a href="#45" id="45">45</a>
+<a href="#46" id="46">46</a>
+<a href="#47" id="47">47</a>
+<a href="#48" id="48">48</a>
+<a href="#49" id="49">49</a>
+<a href="#50" id="50">50</a>
+<a href="#51" id="51">51</a>
+<a href="#52" id="52">52</a>
+<a href="#53" id="53">53</a>
+<a href="#54" id="54">54</a>
+<a href="#55" id="55">55</a>
+<a href="#56" id="56">56</a>
+<a href="#57" id="57">57</a>
+<a href="#58" id="58">58</a>
+<a href="#59" id="59">59</a>
+<a href="#60" id="60">60</a>
+<a href="#61" id="61">61</a>
+<a href="#62" id="62">62</a>
+<a href="#63" id="63">63</a>
+<a href="#64" id="64">64</a>
+<a href="#65" id="65">65</a>
+<a href="#66" id="66">66</a>
+<a href="#67" id="67">67</a>
+<a href="#68" id="68">68</a>
+<a href="#69" id="69">69</a>
+<a href="#70" id="70">70</a>
+<a href="#71" id="71">71</a>
+<a href="#72" id="72">72</a>
+<a href="#73" id="73">73</a>
+<a href="#74" id="74">74</a>
+<a href="#75" id="75">75</a>
+<a href="#76" id="76">76</a>
+<a href="#77" id="77">77</a>
+<a href="#78" id="78">78</a>
+<a href="#79" id="79">79</a>
+<a href="#80" id="80">80</a>
+<a href="#81" id="81">81</a>
+<a href="#82" id="82">82</a>
+<a href="#83" id="83">83</a>
+<a href="#84" id="84">84</a>
+<a href="#85" id="85">85</a>
+<a href="#86" id="86">86</a>
+<a href="#87" id="87">87</a>
+<a href="#88" id="88">88</a>
+<a href="#89" id="89">89</a>
+<a href="#90" id="90">90</a>
+<a href="#91" id="91">91</a>
+<a href="#92" id="92">92</a>
+<a href="#93" id="93">93</a>
+<a href="#94" id="94">94</a>
+<a href="#95" id="95">95</a>
+<a href="#96" id="96">96</a>
+<a href="#97" id="97">97</a>
+<a href="#98" id="98">98</a>
+</pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::fold::TypeFoldable;
+<span class="kw">use </span><span class="kw">crate</span>::relate::Relate;
+<span class="kw">use </span><span class="kw">crate</span>::solve::{Goal, NoSolution, SolverMode};
+<span class="kw">use crate</span>::{<span class="self">self </span><span class="kw">as </span>ty, Interner};
+
+<span class="kw">pub trait </span>InferCtxtLike: Sized {
+    <span class="kw">type </span>Interner: Interner;
+    <span class="kw">fn </span>cx(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span>::Interner;
+
+    <span class="kw">fn </span>solver_mode(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SolverMode;
+
+    <span class="kw">fn </span>universe(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; ty::UniverseIndex;
+    <span class="kw">fn </span>create_next_universe(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; ty::UniverseIndex;
+
+    <span class="kw">fn </span>universe_of_ty(<span class="kw-2">&amp;</span><span class="self">self</span>, ty: ty::TyVid) -&gt; <span class="prelude-ty">Option</span>&lt;ty::UniverseIndex&gt;;
+    <span class="kw">fn </span>universe_of_lt(<span class="kw-2">&amp;</span><span class="self">self</span>, lt: ty::RegionVid) -&gt; <span class="prelude-ty">Option</span>&lt;ty::UniverseIndex&gt;;
+    <span class="kw">fn </span>universe_of_ct(<span class="kw-2">&amp;</span><span class="self">self</span>, ct: ty::ConstVid) -&gt; <span class="prelude-ty">Option</span>&lt;ty::UniverseIndex&gt;;
+
+    <span class="kw">fn </span>root_ty_var(<span class="kw-2">&amp;</span><span class="self">self</span>, var: ty::TyVid) -&gt; ty::TyVid;
+    <span class="kw">fn </span>root_const_var(<span class="kw-2">&amp;</span><span class="self">self</span>, var: ty::ConstVid) -&gt; ty::ConstVid;
+
+    <span class="kw">fn </span>opportunistic_resolve_ty_var(<span class="kw-2">&amp;</span><span class="self">self</span>, vid: ty::TyVid) -&gt; &lt;<span class="self">Self</span>::Interner <span class="kw">as </span>Interner&gt;::Ty;
+    <span class="kw">fn </span>opportunistic_resolve_int_var(<span class="kw-2">&amp;</span><span class="self">self</span>, vid: ty::IntVid) -&gt; &lt;<span class="self">Self</span>::Interner <span class="kw">as </span>Interner&gt;::Ty;
+    <span class="kw">fn </span>opportunistic_resolve_float_var(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        vid: ty::FloatVid,
+    ) -&gt; &lt;<span class="self">Self</span>::Interner <span class="kw">as </span>Interner&gt;::Ty;
+    <span class="kw">fn </span>opportunistic_resolve_ct_var(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        vid: ty::ConstVid,
+    ) -&gt; &lt;<span class="self">Self</span>::Interner <span class="kw">as </span>Interner&gt;::Const;
+    <span class="kw">fn </span>opportunistic_resolve_effect_var(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        vid: ty::EffectVid,
+    ) -&gt; &lt;<span class="self">Self</span>::Interner <span class="kw">as </span>Interner&gt;::Const;
+    <span class="kw">fn </span>opportunistic_resolve_lt_var(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        vid: ty::RegionVid,
+    ) -&gt; &lt;<span class="self">Self</span>::Interner <span class="kw">as </span>Interner&gt;::Region;
+
+    <span class="kw">fn </span>defining_opaque_types(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; &lt;<span class="self">Self</span>::Interner <span class="kw">as </span>Interner&gt;::DefiningOpaqueTypes;
+
+    <span class="kw">fn </span>next_ty_infer(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; &lt;<span class="self">Self</span>::Interner <span class="kw">as </span>Interner&gt;::Ty;
+    <span class="kw">fn </span>next_const_infer(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; &lt;<span class="self">Self</span>::Interner <span class="kw">as </span>Interner&gt;::Const;
+    <span class="kw">fn </span>fresh_args_for_item(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        def_id: &lt;<span class="self">Self</span>::Interner <span class="kw">as </span>Interner&gt;::DefId,
+    ) -&gt; &lt;<span class="self">Self</span>::Interner <span class="kw">as </span>Interner&gt;::GenericArgs;
+
+    <span class="kw">fn </span>instantiate_binder_with_infer&lt;T: TypeFoldable&lt;<span class="self">Self</span>::Interner&gt; + Copy&gt;(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        value: ty::Binder&lt;<span class="self">Self</span>::Interner, T&gt;,
+    ) -&gt; T;
+
+    <span class="kw">fn </span>enter_forall&lt;T: TypeFoldable&lt;<span class="self">Self</span>::Interner&gt; + Copy, U&gt;(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        value: ty::Binder&lt;<span class="self">Self</span>::Interner, T&gt;,
+        f: <span class="kw">impl </span>FnOnce(T) -&gt; U,
+    ) -&gt; U;
+
+    <span class="kw">fn </span>relate&lt;T: Relate&lt;<span class="self">Self</span>::Interner&gt;&gt;(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        param_env: &lt;<span class="self">Self</span>::Interner <span class="kw">as </span>Interner&gt;::ParamEnv,
+        lhs: T,
+        variance: ty::Variance,
+        rhs: T,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;Goal&lt;<span class="self">Self</span>::Interner, &lt;<span class="self">Self</span>::Interner <span class="kw">as </span>Interner&gt;::Predicate&gt;&gt;, NoSolution&gt;;
+
+    <span class="kw">fn </span>eq_structurally_relating_aliases&lt;T: Relate&lt;<span class="self">Self</span>::Interner&gt;&gt;(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        param_env: &lt;<span class="self">Self</span>::Interner <span class="kw">as </span>Interner&gt;::ParamEnv,
+        lhs: T,
+        rhs: T,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;Goal&lt;<span class="self">Self</span>::Interner, &lt;<span class="self">Self</span>::Interner <span class="kw">as </span>Interner&gt;::Predicate&gt;&gt;, NoSolution&gt;;
+
+    <span class="kw">fn </span>shallow_resolve(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        ty: &lt;<span class="self">Self</span>::Interner <span class="kw">as </span>Interner&gt;::Ty,
+    ) -&gt; &lt;<span class="self">Self</span>::Interner <span class="kw">as </span>Interner&gt;::Ty;
+
+    <span class="kw">fn </span>resolve_vars_if_possible&lt;T&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, value: T) -&gt; T
+    <span class="kw">where
+        </span>T: TypeFoldable&lt;<span class="self">Self</span>::Interner&gt;;
+
+    <span class="kw">fn </span>probe&lt;T&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, probe: <span class="kw">impl </span>FnOnce() -&gt; T) -&gt; T;
+
+    <span class="kw">fn </span>sub_regions(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        sub: &lt;<span class="self">Self</span>::Interner <span class="kw">as </span>Interner&gt;::Region,
+        sup: &lt;<span class="self">Self</span>::Interner <span class="kw">as </span>Interner&gt;::Region,
+    );
+
+    <span class="kw">fn </span>register_ty_outlives(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        ty: &lt;<span class="self">Self</span>::Interner <span class="kw">as </span>Interner&gt;::Ty,
+        r: &lt;<span class="self">Self</span>::Interner <span class="kw">as </span>Interner&gt;::Region,
+    );
+}
+</code></pre></div></section></main></body></html>

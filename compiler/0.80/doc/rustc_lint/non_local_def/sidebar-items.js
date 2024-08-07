@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["did_has_local_parent","impl_trait_ref_has_enough_non_local_candidates","path_has_local_parent","path_name_to_string","path_span_without_args","self_ty_kind_for_diagnostic","ty_has_local_parent"],"static":["NON_LOCAL_DEFINITIONS"],"struct":["NonLocalDefinitions","PathCollector","ReplaceLocalTypesWithInfer"]};

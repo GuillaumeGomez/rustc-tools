@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["expand_deriving_smart_ptr"],"macro":["path"]};

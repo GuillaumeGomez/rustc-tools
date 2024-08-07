@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["elaborate","supertrait_def_ids","supertraits","transitive_bounds"],"struct":["Elaborator","FilterToTraits"],"trait":["Elaboratable"]};

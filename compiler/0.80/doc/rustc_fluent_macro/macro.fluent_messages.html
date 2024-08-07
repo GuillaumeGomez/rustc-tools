@@ -1,0 +1,44 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Implements the `fluent_messages` macro, which performs compile-time validation of the compiler’s Fluent resources (i.e. that the resources parse and don’t multiply define the same messages) and generates constants that make using those messages in diagnostics more ergonomic."><title>fluent_messages in rustc_fluent_macro - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../static.files/rustdoc-5ca6ca2a1f83705a.css"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="rustc_fluent_macro" data-themes="" data-resource-suffix="" data-rustdoc-version="1.82.0-dev" data-channel="nightly" data-search-js="search-d234aafac6c221dd.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../static.files/storage-118b08c4c78b968e.js"></script><script defer src="sidebar-items.js"></script><script defer src="../static.files/main-d2fab2bf619172d3.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-df360f571f6edeae.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc macro"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button><a class="logo-container" href="../rustc_fluent_macro/index.html"><img class="rust-logo" src="../static.files/rust-logo-151179464ae7ed46.svg" alt=""></a></nav><nav class="sidebar"><div class="sidebar-crate"><a class="logo-container" href="../rustc_fluent_macro/index.html"><img class="rust-logo" src="../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><h2><a href="../rustc_fluent_macro/index.html">rustc_fluent_macro</a><span class="version">0.0.0</span></h2></div><div class="sidebar-elems"></div></nav><div class="sidebar-resizer"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1>Macro <a href="index.html">rustc_fluent_macro</a>::<wbr><a class="macro" href="#">fluent_messages</a><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><span class="out-of-band"><a class="src" href="../src/rustc_fluent_macro/lib.rs.html#69-71">source</a> · <button id="toggle-all-docs" title="collapse all docs">[<span>&#x2212;</span>]</button></span></div><pre class="rust item-decl"><code>fluent_messages!() { <span class="comment">/* proc-macro */</span> }</code></pre><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Implements the <code>fluent_messages</code> macro, which performs compile-time validation of the
+compiler’s Fluent resources (i.e. that the resources parse and don’t multiply define the same
+messages) and generates constants that make using those messages in diagnostics more ergonomic.</p>
+<p>For example, given the following invocation of the macro..</p>
+
+<div class="example-wrap ignore"><a href="#" class="tooltip" title="This example is not tested">ⓘ</a><pre class="rust rust-example-rendered"><code><span class="macro">fluent_messages!</span> { <span class="string">"./typeck.ftl" </span>}</code></pre></div>
+<p>..where <code>typeck.ftl</code> has the following contents..</p>
+<div class="example-wrap"><pre class="language-fluent"><code>typeck_field_multiply_specified_in_initializer =
+    field `{$ident}` specified more than once
+    .label = used more than once
+    .label_previous_use = first use of `{$ident}`
+</code></pre></div>
+<p>…then the macro parse the Fluent resource, emitting a diagnostic if it fails to do so, and
+will generate the following code:</p>
+
+<div class="example-wrap ignore"><a href="#" class="tooltip" title="This example is not tested">ⓘ</a><pre class="rust rust-example-rendered"><code><span class="kw">pub static </span>DEFAULT_LOCALE_RESOURCE: <span class="kw-2">&amp;</span><span class="lifetime">'static </span>[<span class="kw-2">&amp;</span><span class="lifetime">'static </span>str] = <span class="macro">include_str!</span>(<span class="string">"./typeck.ftl"</span>);
+
+<span class="kw">mod </span>fluent_generated {
+    <span class="kw">mod </span>typeck {
+        <span class="kw">pub const </span>field_multiply_specified_in_initializer: DiagMessage =
+            DiagMessage::fluent(<span class="string">"typeck_field_multiply_specified_in_initializer"</span>);
+        <span class="kw">pub const </span>field_multiply_specified_in_initializer_label_previous_use: DiagMessage =
+            DiagMessage::fluent_attr(
+                <span class="string">"typeck_field_multiply_specified_in_initializer"</span>,
+                <span class="string">"previous_use_label"
+            </span>);
+    }
+}</code></pre></div>
+<p>When emitting a diagnostic, the generated constants can be used as follows:</p>
+
+<div class="example-wrap ignore"><a href="#" class="tooltip" title="This example is not tested">ⓘ</a><pre class="rust rust-example-rendered"><code><span class="kw">let </span><span class="kw-2">mut </span>err = sess.struct_span_err(
+    span,
+    fluent::typeck::field_multiply_specified_in_initializer
+);
+err.span_default_label(span);
+err.span_label(
+    previous_use_span,
+    fluent::typeck::field_multiply_specified_in_initializer_label_previous_use
+);
+err.emit();</code></pre></div>
+<p>Note: any crate using this macro must also have a dependency on
+<code>rustc_errors</code>, because the generated code refers to things from that
+crate.</p>
+</div></details></section></div></main></body></html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="API documentation for the Rust `TypeRelation` trait in crate `rustc_next_trait_solver`."><title>TypeRelation in rustc_next_trait_solver::relate::combine - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-5ca6ca2a1f83705a.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="rustc_next_trait_solver" data-themes="" data-resource-suffix="" data-rustdoc-version="1.82.0-dev" data-channel="nightly" data-search-js="search-d234aafac6c221dd.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="sidebar-items.js"></script><script defer src="../../../static.files/main-d2fab2bf619172d3.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-df360f571f6edeae.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc trait"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../../../rustc_next_trait_solver/index.html">rustc_next_trait_solver</a><span class="version">1.82.0-dev</span></h2></div><h2 class="location"><a href="#">TypeRelation</a></h2><div class="sidebar-elems"><section><h3><a href="#required-methods">Required Methods</a></h3><ul class="block"><li><a href="#tymethod.binders">binders</a></li><li><a href="#tymethod.consts">consts</a></li><li><a href="#tymethod.cx">cx</a></li><li><a href="#tymethod.regions">regions</a></li><li><a href="#tymethod.relate_with_variance">relate_with_variance</a></li><li><a href="#tymethod.tys">tys</a></li></ul><h3><a href="#provided-methods">Provided Methods</a></h3><ul class="block"><li><a href="#method.relate">relate</a></li><li><a href="#method.relate_item_args">relate_item_args</a></li></ul><h3><a href="#object-safety">Object Safety</a></h3><h3><a href="#implementors">Implementors</a></h3></section><h2><a href="index.html">In rustc_next_trait_solver::relate::combine</a></h2></div></nav><div class="sidebar-resizer"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1>Trait <a href="../../index.html">rustc_next_trait_solver</a>::<wbr><a href="../index.html">relate</a>::<wbr><a href="index.html">combine</a>::<wbr><a class="trait" href="#">TypeRelation</a><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><span class="out-of-band"><button id="toggle-all-docs" title="collapse all docs">[<span>&#x2212;</span>]</button></span></div><pre class="rust item-decl"><code>pub trait TypeRelation&lt;I&gt;: <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html" title="trait core::marker::Sized">Sized</a><div class="where">where
+    I: Interner,</div>{
+    // Required methods
+    fn <a href="#tymethod.cx" class="fn">cx</a>(&amp;self) -&gt; I;
+<span class="item-spacer"></span>    fn <a href="#tymethod.relate_with_variance" class="fn">relate_with_variance</a>&lt;T&gt;(
+        &amp;mut self,
+        variance: Variance,
+        info: <a class="enum" href="../enum.VarianceDiagInfo.html" title="enum rustc_next_trait_solver::relate::VarianceDiagInfo">VarianceDiagInfo</a>&lt;I&gt;,
+        a: T,
+        b: T,
+    ) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;T, TypeError&lt;I&gt;&gt;
+       <span class="where">where T: <a class="trait" href="../trait.Relate.html" title="trait rustc_next_trait_solver::relate::Relate">Relate</a>&lt;I&gt;</span>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.tys" class="fn">tys</a>(
+        &amp;mut self,
+        a: &lt;I as Interner&gt;::Ty,
+        b: &lt;I as Interner&gt;::Ty,
+    ) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;&lt;I as Interner&gt;::Ty, TypeError&lt;I&gt;&gt;;
+<span class="item-spacer"></span>    fn <a href="#tymethod.regions" class="fn">regions</a>(
+        &amp;mut self,
+        a: &lt;I as Interner&gt;::Region,
+        b: &lt;I as Interner&gt;::Region,
+    ) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;&lt;I as Interner&gt;::Region, TypeError&lt;I&gt;&gt;;
+<span class="item-spacer"></span>    fn <a href="#tymethod.consts" class="fn">consts</a>(
+        &amp;mut self,
+        a: &lt;I as Interner&gt;::Const,
+        b: &lt;I as Interner&gt;::Const,
+    ) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;&lt;I as Interner&gt;::Const, TypeError&lt;I&gt;&gt;;
+<span class="item-spacer"></span>    fn <a href="#tymethod.binders" class="fn">binders</a>&lt;T&gt;(
+        &amp;mut self,
+        a: Binder&lt;I, T&gt;,
+        b: Binder&lt;I, T&gt;,
+    ) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;Binder&lt;I, T&gt;, TypeError&lt;I&gt;&gt;
+       <span class="where">where T: <a class="trait" href="../trait.Relate.html" title="trait rustc_next_trait_solver::relate::Relate">Relate</a>&lt;I&gt;</span>;
+
+    // Provided methods
+    fn <a href="#method.relate" class="fn">relate</a>&lt;T&gt;(&amp;mut self, a: T, b: T) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;T, TypeError&lt;I&gt;&gt;
+       <span class="where">where T: <a class="trait" href="../trait.Relate.html" title="trait rustc_next_trait_solver::relate::Relate">Relate</a>&lt;I&gt;</span> { ... }
+<span class="item-spacer"></span>    fn <a href="#method.relate_item_args" class="fn">relate_item_args</a>(
+        &amp;mut self,
+        item_def_id: &lt;I as Interner&gt;::DefId,
+        a_arg: &lt;I as Interner&gt;::GenericArgs,
+        b_arg: &lt;I as Interner&gt;::GenericArgs,
+    ) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;&lt;I as Interner&gt;::GenericArgs, TypeError&lt;I&gt;&gt; { ... }
+}</code></pre><h2 id="required-methods" class="section-header">Required Methods<a href="#required-methods" class="anchor">§</a></h2><div class="methods"><section id="tymethod.cx" class="method"><h4 class="code-header">fn <a href="#tymethod.cx" class="fn">cx</a>(&amp;self) -&gt; I</h4></section><details class="toggle method-toggle" open><summary><section id="tymethod.relate_with_variance" class="method"><h4 class="code-header">fn <a href="#tymethod.relate_with_variance" class="fn">relate_with_variance</a>&lt;T&gt;(
+    &amp;mut self,
+    variance: Variance,
+    info: <a class="enum" href="../enum.VarianceDiagInfo.html" title="enum rustc_next_trait_solver::relate::VarianceDiagInfo">VarianceDiagInfo</a>&lt;I&gt;,
+    a: T,
+    b: T,
+) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;T, TypeError&lt;I&gt;&gt;<div class="where">where
+    T: <a class="trait" href="../trait.Relate.html" title="trait rustc_next_trait_solver::relate::Relate">Relate</a>&lt;I&gt;,</div></h4></section></summary><div class="docblock"><p>Switch variance for the purpose of relating <code>a</code> and <code>b</code>.</p>
+</div></details><section id="tymethod.tys" class="method"><h4 class="code-header">fn <a href="#tymethod.tys" class="fn">tys</a>(
+    &amp;mut self,
+    a: &lt;I as Interner&gt;::Ty,
+    b: &lt;I as Interner&gt;::Ty,
+) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;&lt;I as Interner&gt;::Ty, TypeError&lt;I&gt;&gt;</h4></section><section id="tymethod.regions" class="method"><h4 class="code-header">fn <a href="#tymethod.regions" class="fn">regions</a>(
+    &amp;mut self,
+    a: &lt;I as Interner&gt;::Region,
+    b: &lt;I as Interner&gt;::Region,
+) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;&lt;I as Interner&gt;::Region, TypeError&lt;I&gt;&gt;</h4></section><section id="tymethod.consts" class="method"><h4 class="code-header">fn <a href="#tymethod.consts" class="fn">consts</a>(
+    &amp;mut self,
+    a: &lt;I as Interner&gt;::Const,
+    b: &lt;I as Interner&gt;::Const,
+) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;&lt;I as Interner&gt;::Const, TypeError&lt;I&gt;&gt;</h4></section><section id="tymethod.binders" class="method"><h4 class="code-header">fn <a href="#tymethod.binders" class="fn">binders</a>&lt;T&gt;(
+    &amp;mut self,
+    a: Binder&lt;I, T&gt;,
+    b: Binder&lt;I, T&gt;,
+) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;Binder&lt;I, T&gt;, TypeError&lt;I&gt;&gt;<div class="where">where
+    T: <a class="trait" href="../trait.Relate.html" title="trait rustc_next_trait_solver::relate::Relate">Relate</a>&lt;I&gt;,</div></h4></section></div><h2 id="provided-methods" class="section-header">Provided Methods<a href="#provided-methods" class="anchor">§</a></h2><div class="methods"><details class="toggle method-toggle" open><summary><section id="method.relate" class="method"><h4 class="code-header">fn <a href="#method.relate" class="fn">relate</a>&lt;T&gt;(&amp;mut self, a: T, b: T) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;T, TypeError&lt;I&gt;&gt;<div class="where">where
+    T: <a class="trait" href="../trait.Relate.html" title="trait rustc_next_trait_solver::relate::Relate">Relate</a>&lt;I&gt;,</div></h4></section></summary><div class="docblock"><p>Generic relation routine suitable for most anything.</p>
+</div></details><details class="toggle method-toggle" open><summary><section id="method.relate_item_args" class="method"><h4 class="code-header">fn <a href="#method.relate_item_args" class="fn">relate_item_args</a>(
+    &amp;mut self,
+    item_def_id: &lt;I as Interner&gt;::DefId,
+    a_arg: &lt;I as Interner&gt;::GenericArgs,
+    b_arg: &lt;I as Interner&gt;::GenericArgs,
+) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;&lt;I as Interner&gt;::GenericArgs, TypeError&lt;I&gt;&gt;</h4></section></summary><div class="docblock"><p>Relate the two args for the given item. The default
+is to look up the variance for the item and proceed
+accordingly.</p>
+</div></details></div><h2 id="object-safety" class="section-header">Object Safety<a href="#object-safety" class="anchor">§</a></h2><div class="object-safety-info">This trait is <b>not</b> <a href="https://doc.rust-lang.org/nightly/reference/items/traits.html#object-safety">object safe</a>.</div><h2 id="implementors" class="section-header">Implementors<a href="#implementors" class="anchor">§</a></h2><div id="implementors-list"></div><script src="../../../trait.impl/rustc_type_ir/relate/trait.TypeRelation.js" async></script></section></div></main></body></html>
