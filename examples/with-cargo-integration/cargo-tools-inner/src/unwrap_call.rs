@@ -14,27 +14,24 @@ declare_lint_pass!(UnwrapCall => [UNWRAP_CALL]);
 
 impl<'tcx> LateLintPass<'tcx> for UnwrapCall {
     fn check_expr(&mut self, cx: &LateContext<'tcx>, expr: &'tcx Expr<'tcx>) {
-        match expr.kind {
-            ExprKind::MethodCall(name, recv, _args, span) => {
-                if name.ident.as_str() != "unwrap" {
-                    return;
-                }
-                let caller_ty = cx.typeck_results().expr_ty(recv);
-                let is_option_or_result = match caller_ty.kind() {
-                    ty::Adt(adt, _) => {
-                        cx.tcx.is_diagnostic_item(sym::Option, adt.did())
-                            || cx.tcx.is_diagnostic_item(sym::Result, adt.did())
-                    }
-                    _ => false,
-                };
-                if !is_option_or_result {
-                    return;
-                }
-                cx.span_lint(UNWRAP_CALL, span, |diag| {
-                    diag.primary_message("avoid using `unwrap` if possible");
-                });
+        if let ExprKind::MethodCall(name, recv, _args, span) = expr.kind {
+            if name.ident.as_str() != "unwrap" {
+                return;
             }
-            _ => {}
+            let caller_ty = cx.typeck_results().expr_ty(recv);
+            let is_option_or_result = match caller_ty.kind() {
+                ty::Adt(adt, _) => {
+                    cx.tcx.is_diagnostic_item(sym::Option, adt.did())
+                        || cx.tcx.is_diagnostic_item(sym::Result, adt.did())
+                }
+                _ => false,
+            };
+            if !is_option_or_result {
+                return;
+            }
+            cx.span_lint(UNWRAP_CALL, span, |diag| {
+                diag.primary_message("avoid using `unwrap` if possible");
+            });
         }
     }
 }
