@@ -13,6 +13,8 @@ use rustc_session::parse::ParseSess;
 use rustc_span::edition::Edition;
 use rustc_span::source_map::{FilePathMapping, SourceMap};
 
+/// Parse the AST of the crate pointed by "path" and run a callback on each node.
+///
 /// You can check `ParseSess` documentation [here](https://doc.rust-lang.org/nightly/nightly-rustc/rustc_session/parse/struct.ParseSess.html)
 /// and `Crate` documentation [here](https://doc.rust-lang.org/nightly/nightly-rustc/rustc_ast/ast/struct.Crate.html).
 ///
