@@ -1,0 +1,13 @@
+[package]
+name = "cargo-tools-inner"
+version = "0.0.1"
+authors = ["Guillaume Gomez <guillaume1.gomez@gmail.com>"]
+
+description = "Some internal rustc tools made accessible"
+repository = "https://github.com/GuillaumeGomez/rustc-tools"
+license = "MIT"
+readme = "README.md"
+edition = "2021"
+
+[dependencies]
+rustc-tools = { path = "../../../" }

@@ -16,3 +16,15 @@ name = "rustc_tools"
 [dependencies]
 term = "0.7"
 cargo_metadata = "0.18"
+
+[[example]]
+name = "ast"
+path = "examples/without-cargo-integration/ast.rs"
+
+[[example]]
+name = "hir"
+path = "examples/without-cargo-integration/hir.rs"
+
+[[example]]
+name = "lint"
+path = "examples/without-cargo-integration/lint.rs"
