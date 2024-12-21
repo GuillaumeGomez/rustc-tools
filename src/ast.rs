@@ -13,6 +13,8 @@ use rustc_session::parse::ParseSess;
 use rustc_span::edition::Edition;
 use rustc_span::source_map::{FilePathMapping, SourceMap};
 
+/// Parse the AST of the crate pointed by "path" and run a callback on each node.
+///
 /// You can check `ParseSess` documentation [here](https://doc.rust-lang.org/nightly/nightly-rustc/rustc_session/parse/struct.ParseSess.html)
 /// and `Crate` documentation [here](https://doc.rust-lang.org/nightly/nightly-rustc/rustc_ast/ast/struct.Crate.html).
 ///
@@ -51,7 +53,7 @@ impl SilentOnIgnoredFilesEmitter {
 }
 
 impl Translate for SilentOnIgnoredFilesEmitter {
-    fn fluent_bundle(&self) -> Option<&Lrc<rustc_errors::FluentBundle>> {
+    fn fluent_bundle(&self) -> Option<&rustc_errors::FluentBundle> {
         self.emitter.fluent_bundle()
     }
 
@@ -61,7 +63,7 @@ impl Translate for SilentOnIgnoredFilesEmitter {
 }
 
 impl Emitter for SilentOnIgnoredFilesEmitter {
-    fn source_map(&self) -> Option<&Lrc<SourceMap>> {
+    fn source_map(&self) -> Option<&SourceMap> {
         None
     }
 
