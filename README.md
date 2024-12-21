@@ -40,4 +40,4 @@ $ cargo run --example hir -- asset/example_file.rs
 $ cargo run --example lint -- asset/example_file.rs
 ```
 
-A more complete example with cargo integration is available [here](https://github.com/GuillaumeGomez/rustc-tools-example).
+A more complete example with cargo integration is available in the `examples/with-cargo-integration`.

@@ -43,14 +43,11 @@ jobs:
       - uses: actions/checkout@v4
       - name: Run tests
         run: |
-          git clone "https://github.com/GuillaumeGomez/rustc-tools-example"
-          cd rustc-tools-example
-          cd cargo-tools-inner
-          : # We make it target the current `rustc-tools`
-          sed -ie 's|rustc\-tools = "[[:digit:]]\+\.[[:digit:]]\+\.[[:digit:]]\+"|rustc\-tools = \{ path = "../../" \}|' Cargo.toml
+          : # First we install `rustc-tools-inner`
+          cd examples/with-cargo-integration/cargo-tools-inner
           cargo install --path .
+          : # Then we install `rustc-tools`
           cd ../cargo-tools
           cargo install --path .
-          cd ../../tests
           : # We ensure that the lints are run.
           cargo tools 2>&1 | grep 'functions with odd number of lines should not exist'
