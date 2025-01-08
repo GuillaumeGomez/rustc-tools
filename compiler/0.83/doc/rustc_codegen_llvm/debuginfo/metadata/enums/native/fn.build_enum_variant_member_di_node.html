@@ -1,0 +1,38 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Build the debuginfo node for `DW_TAG_variant`:"><title>build_enum_variant_member_di_node in rustc_codegen_llvm::debuginfo::metadata::enums::native - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../../static.files/rustdoc-49344e4802b2d48a.css"><meta name="rustdoc-vars" data-root-path="../../../../../" data-static-root-path="../../../../../static.files/" data-current-crate="rustc_codegen_llvm" data-themes="" data-resource-suffix="" data-rustdoc-version="1.83.0-dev" data-channel="nightly" data-search-js="search-e056c65ede92db13.js" data-settings-js="settings-805db61a62df4bd2.js" ><script src="../../../../../static.files/storage-1d39b6787ed640ff.js"></script><script defer src="sidebar-items.js"></script><script defer src="../../../../../static.files/main-f070b9041d14864c.js"></script><noscript><link rel="stylesheet" href="../../../../../static.files/noscript-0111fcff984fae8f.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc fn"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button><a class="logo-container" href="../../../../../rustc_codegen_llvm/index.html"><img class="rust-logo" src="../../../../../static.files/rust-logo-151179464ae7ed46.svg" alt=""></a></nav><nav class="sidebar"><div class="sidebar-crate"><a class="logo-container" href="../../../../../rustc_codegen_llvm/index.html"><img class="rust-logo" src="../../../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><h2><a href="../../../../../rustc_codegen_llvm/index.html">rustc_<wbr>codegen_<wbr>llvm</a><span class="version">1.83.0-dev</span></h2></div><div class="sidebar-elems"><div id="rustdoc-modnav"><h2><a href="index.html">In rustc_<wbr>codegen_<wbr>llvm::<wbr>debuginfo::<wbr>metadata::<wbr>enums::<wbr>native</a></h2></div></div></nav><div class="sidebar-resizer"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><span class="rustdoc-breadcrumbs"><a href="../../../../index.html">rustc_codegen_llvm</a>::<wbr><a href="../../../index.html">debuginfo</a>::<wbr><a href="../../index.html">metadata</a>::<wbr><a href="../index.html">enums</a>::<wbr><a href="index.html">native</a></span><h1>Function <span class="fn">build_enum_variant_member_di_node</span><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../../../../../src/rustc_codegen_llvm/debuginfo/metadata/enums/native.rs.html#385-414">source</a> </span></div><pre class="rust item-decl"><code>fn build_enum_variant_member_di_node&lt;'ll, 'tcx&gt;(
+    cx: &amp;<a class="struct" href="../../../../context/struct.CodegenCx.html" title="struct rustc_codegen_llvm::context::CodegenCx">CodegenCx</a>&lt;'ll, 'tcx&gt;,
+    enum_type_and_layout: <a class="type" href="../../../../../rustc_middle/ty/layout/type.TyAndLayout.html" title="type rustc_middle::ty::layout::TyAndLayout">TyAndLayout</a>&lt;'tcx&gt;,
+    variant_part_di_node: &amp;'ll <a class="type" href="../../../../llvm_/ffi/debuginfo/type.DIType.html" title="type rustc_codegen_llvm::llvm_::ffi::debuginfo::DIType">DIType</a>,
+    variant_member_info: &amp;<a class="struct" href="struct.VariantMemberInfo.html" title="struct rustc_codegen_llvm::debuginfo::metadata::enums::native::VariantMemberInfo">VariantMemberInfo</a>&lt;'_, 'll&gt;,
+) -&gt; &amp;'ll <a class="type" href="../../../../llvm_/ffi/debuginfo/type.DIType.html" title="type rustc_codegen_llvm::llvm_::ffi::debuginfo::DIType">DIType</a></code></pre><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Build the debuginfo node for <code>DW_TAG_variant</code>:</p>
+<div class="example-wrap"><pre class="language-txt"><code>      DW_TAG_structure_type              (top-level type for enum)
+        DW_TAG_variant_part              (variant part)
+          DW_AT_discr                    (reference to discriminant DW_TAG_member)
+          DW_TAG_member                  (discriminant member)
+ ---&gt;     DW_TAG_variant                 (variant 1)
+ ---&gt;     DW_TAG_variant                 (variant 2)
+ ---&gt;     DW_TAG_variant                 (variant 3)
+        DW_TAG_structure_type            (type of variant 1)
+        DW_TAG_structure_type            (type of variant 2)
+        DW_TAG_structure_type            (type of variant 3)</code></pre></div>
+<p>This node looks like:</p>
+<div class="example-wrap"><pre class="language-txt"><code>DW_TAG_variant
+  DW_AT_discr_value           0
+  DW_TAG_member
+    DW_AT_name                  None
+    DW_AT_type                  &lt;0x000002a1&gt;
+    DW_AT_alignment             0x00000002
+    DW_AT_data_member_location  0</code></pre></div>
+<p>The DW_AT_discr_value is optional, and is omitted if</p>
+<ul>
+<li>This is the only variant of a univariant enum (i.e. their is no discriminant)</li>
+<li>This is the “untagged” variant of a niche-layout enum
+(where only the other variants are identified by a single value)</li>
+</ul>
+<p>There is only ever a single member, the type of which is a struct that describes the
+fields of the variant (excluding the discriminant). The name of the member is the name
+of the variant as given in the source code. The DW_AT_data_member_location is always
+zero.</p>
+<p>Note that the LLVM DIBuilder API is a bit unintuitive here. The DW_TAG_variant subtree
+(including the DW_TAG_member) is built by a single call to
+<code>LLVMRustDIBuilderCreateVariantMemberType()</code>.</p>
+</div></details></section></div></main></body></html>

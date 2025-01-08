@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["contains_maybe_sized_bound","contains_maybe_sized_bound_on_pointee","expand_deriving_smart_ptr","is_maybe_sized_bound","is_sized_marker","path_segment_is_exact_match"],"macro":["path"],"struct":["AlwaysErrorOnGenericParam","DetectNonGenericPointeeAttr","TypeSubstitution"]};

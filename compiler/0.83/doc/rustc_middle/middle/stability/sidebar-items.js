@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["AllowUnstable","EvalResult","StabilityLevel"],"fn":["deprecated_since_kind","deprecation_lint","early_report_macro_deprecation","late_report_deprecation","report_unstable","skip_stability_check_due_to_privacy","suggestion_for_allocator_api"],"struct":["Deprecated","DeprecationEntry","DeprecationSuggestion","Index"]};

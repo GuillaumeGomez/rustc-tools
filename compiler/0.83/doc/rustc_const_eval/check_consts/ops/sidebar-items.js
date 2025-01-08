@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["DiagImportance","Status"],"struct":["Coroutine","EscapingCellBorrow","EscapingMutBorrow","FnCallIndirect","FnCallNonConst","FnCallUnstable","HeapAllocation","InlineAsm","LiveDrop","PanicNonStr","RawPtrComparison","RawPtrToIntCast","ThreadLocalAccess"],"trait":["NonConstOp"]};

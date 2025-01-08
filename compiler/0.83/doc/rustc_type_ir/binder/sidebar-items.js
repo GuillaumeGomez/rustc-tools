@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"macro":["impl_binder_encode_decode"],"struct":["ArgFolder","Binder","EarlyBinder","EarlyBinderIter","IterInstantiated","IterInstantiatedCopied","ValidateBoundVars"]};

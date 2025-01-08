@@ -1,0 +1,29 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="The `binary_asm_labels` lint detects the use of numeric labels containing only binary digits in the inline `asm!` macro."><title>BINARY_ASM_LABELS in rustc_lint::builtin - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-49344e4802b2d48a.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="rustc_lint" data-themes="" data-resource-suffix="" data-rustdoc-version="1.83.0-dev" data-channel="nightly" data-search-js="search-e056c65ede92db13.js" data-settings-js="settings-805db61a62df4bd2.js" ><script src="../../static.files/storage-1d39b6787ed640ff.js"></script><script defer src="sidebar-items.js"></script><script defer src="../../static.files/main-f070b9041d14864c.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-0111fcff984fae8f.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc static"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button><a class="logo-container" href="../../rustc_lint/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt=""></a></nav><nav class="sidebar"><div class="sidebar-crate"><a class="logo-container" href="../../rustc_lint/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><h2><a href="../../rustc_lint/index.html">rustc_<wbr>lint</a><span class="version">1.83.0-dev</span></h2></div><div class="sidebar-elems"><section id="rustdoc-toc"><h2 class="location"><a href="#">BINARY_<wbr>ASM_<wbr>LABELS</a></h2><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#example" title="Example">Example</a></li><li><a href="#explanation" title="Explanation">Explanation</a></li></ul></section><div id="rustdoc-modnav"><h2><a href="index.html">In rustc_<wbr>lint::<wbr>builtin</a></h2></div></div></nav><div class="sidebar-resizer"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><span class="rustdoc-breadcrumbs"><a href="../index.html">rustc_lint</a>::<wbr><a href="index.html">builtin</a></span><h1>Static <span class="static">BINARY_ASM_LABELS</span><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../../src/rustc_lint/builtin.rs.html#2755-2803">source</a> </span></div><pre class="rust item-decl"><code>pub static BINARY_ASM_LABELS: &amp;<a class="struct" href="../struct.Lint.html" title="struct rustc_lint::Lint">Lint</a></code></pre><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>The <code>binary_asm_labels</code> lint detects the use of numeric labels containing only binary
+digits in the inline <code>asm!</code> macro.</p>
+<h4 id="example"><a class="doc-anchor" href="#example">§</a>Example</h4>
+<div class="example-wrap ignore"><a href="#" class="tooltip" title="This example is not tested">ⓘ</a><pre class="rust rust-example-rendered"><code><span class="attr">#![cfg(target_arch = <span class="string">"x86_64"</span>)]
+
+</span><span class="kw">use </span>std::arch::asm;
+
+<span class="kw">fn </span>main() {
+    <span class="kw">unsafe </span>{
+        <span class="macro">asm!</span>(<span class="string">"0: jmp 0b"</span>);
+    }
+}</code></pre></div>
+<p>This will produce:</p>
+<div class="example-wrap"><pre class="language-text"><code>error: avoid using labels containing only the digits `0` and `1` in inline assembly
+ --&gt; &lt;source&gt;:7:15
+  |
+7 |         asm!(&quot;0: jmp 0b&quot;);
+  |               ^ use a different label that doesn&#39;t start with `0` or `1`
+  |
+  = help: start numbering with `2` instead
+  = note: an LLVM bug makes these labels ambiguous with a binary literal number on x86
+  = note: see &lt;https://github.com/llvm/llvm-project/issues/99547&gt; for more information
+  = note: `#[deny(binary_asm_labels)]` on by default</code></pre></div><h4 id="explanation"><a class="doc-anchor" href="#explanation">§</a>Explanation</h4>
+<p>An <a href="https://github.com/llvm/llvm-project/issues/99547">LLVM bug</a> causes this code to fail to compile because it interprets the <code>0b</code> as a binary
+literal instead of a reference to the previous local label <code>0</code>. To work around this bug,
+don’t use labels that could be confused with a binary literal.</p>
+<p>This behavior is platform-specific to x86 and x86-64.</p>
+<p>See the explanation in <a href="https://doc.rust-lang.org/nightly/rust-by-example/unsafe/asm.html#labels">Rust By Example</a> for more details.</p>
+</div></details></section></div></main></body></html>

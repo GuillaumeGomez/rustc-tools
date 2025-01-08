@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["Arch","TargetAbi"],"fn":["base","deployment_target","deployment_target_for_target","link_env_remove","llvm_target","parse_version","platform"]};
