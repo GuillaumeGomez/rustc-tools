@@ -155,21 +155,19 @@ fn new_dcx(
         false,
     );
     let emitter: Box<DynEmitter> = match error_format {
-        ErrorOutputType::HumanReadable(kind) => {
-            let (short, color_config) = kind.unzip();
-            Box::new(
-                HumanEmitter::new(stderr_destination(color_config), fallback_bundle)
-                    .sm(source_map.map(|sm| sm as _))
-                    .short_message(short)
-                    .teach(unstable_opts.teach)
-                    .diagnostic_width(diagnostic_width)
-                    .track_diagnostics(unstable_opts.track_diagnostics)
-                    .ui_testing(unstable_opts.ui_testing),
-            )
-        }
+        ErrorOutputType::HumanReadable(human_readable, color_config) => Box::new(
+            HumanEmitter::new(stderr_destination(color_config), fallback_bundle)
+                .sm(source_map.map(|sm| sm as _))
+                .short_message(human_readable.short())
+                .teach(unstable_opts.teach)
+                .diagnostic_width(diagnostic_width)
+                .track_diagnostics(unstable_opts.track_diagnostics)
+                .ui_testing(unstable_opts.ui_testing),
+        ),
         ErrorOutputType::Json {
             pretty,
             json_rendered,
+            color_config,
         } => {
             let source_map =
                 source_map.unwrap_or_else(|| Lrc::new(SourceMap::new(FilePathMapping::empty())));
@@ -180,6 +178,7 @@ fn new_dcx(
                     fallback_bundle,
                     pretty,
                     json_rendered,
+                    color_config,
                 )
                 .ui_testing(unstable_opts.ui_testing)
                 .diagnostic_width(diagnostic_width)
@@ -198,8 +197,13 @@ fn create_config(
     args: Vec<String>,
 ) -> Option<interface::Config> {
     let color = config::parse_color(early_dcx, matches);
-    let config::JsonConfig { json_rendered, .. } = config::parse_json(early_dcx, matches);
-    let error_format = config::parse_error_format(early_dcx, matches, color, json_rendered);
+    let config::JsonConfig {
+        json_rendered,
+        json_color,
+        ..
+    } = config::parse_json(early_dcx, matches);
+    let error_format =
+        config::parse_error_format(early_dcx, matches, color, json_color, json_rendered);
     let diagnostic_width = matches.opt_get("diagnostic-width").unwrap_or_default();
 
     let codegen_options = CodegenOptions::build(early_dcx, matches);
@@ -296,7 +300,7 @@ fn create_config(
         }),
         make_codegen_backend: None,
         registry: rustc_driver::diagnostics_registry(),
-        locale_resources: rustc_driver::DEFAULT_LOCALE_RESOURCES,
+        locale_resources: rustc_driver::DEFAULT_LOCALE_RESOURCES.to_vec(),
         ice_file: None,
         using_internal_features: Arc::default(),
         expanded_args: args,

@@ -24,7 +24,7 @@ cargo install --path .
 And then we install `cargo-tools` with:
 
 ```
-cargo install --path ../..
+cargo install --path ../cargo-tools
 ```
 
 And now you can run `cargo tools` on any crate you want!

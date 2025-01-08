@@ -62,6 +62,8 @@ pub fn cargo_integration<T, F: Fn(&[String]) -> T>(
         }
     }
 
+    command.wait().unwrap();
+
     let artifact = match artifacts.pop() {
         Some(artifact) => artifact,
         None => return Err("Nothing to check?".to_string()),
